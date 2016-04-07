@@ -1,0 +1,362 @@
+package com.ajou.secure.user;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ajou.secure.common.RequestParameter;
+import com.ajou.secure.common.Utils;
+import com.ajou.secure.user.User;
+import com.ajou.secure.user.UserServiceImpl;
+
+@Controller
+public class UserController {
+	
+	@Resource(name = "userService")
+	private UserServiceImpl userService;
+	
+	@Resource(name = "shaEncoder")
+	private ShaEncoder encoder;
+	
+	/**
+	 * 로그인
+	 * */
+	@RequestMapping("/user/login.do")
+	public ModelAndView login(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		rp.replace("userPassword", encoder.encoding(rp.get("userPassword").toString()));
+		
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> userMap = new HashMap<String, Object>();
+		
+		User user = (User) this.userService.login(rp);
+		
+		if(user != null){
+			userMap.put("userSeq", user.getUserNumSeq());
+			userMap.put("userID", user.getUserID());
+			userMap.put("userName", user.getUserName());
+			
+			//세션처리 - html5 sessionStorage 이용
+
+			map.put("success", userMap);
+		}else{
+			map.put("fail", "로그인 실패");
+		}
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	/**
+	 * 로그아웃 - html5 sessionStorage Clear
+	 * */
+	
+	
+	// 사용자 등록 로직 구현(10.8)
+	@RequestMapping("/user/user_registration.do")
+	public ModelAndView userRegistration(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		
+		//웹 서블릿 요청에서부터 JSON 메시지를 가져와서 rp 오브젝트에 저장
+		//RequestParameter rp는 Hashmap을 상속받으며, JSON의 데이터를 입력하는 공간 
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+
+		//차후 View(클라이언트측으로)로 보내기 위한 오브젝트 생성
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		
+		//임시 저장공간->나중에 클라이언트로 k와 v로 콜백 보내기 위한 공간
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+
+		
+		// Map<String, Object> userMap = new HashMap<String, Object>();
+		
+		// 모델 생성
+		User user = new User();
+		
+		//체커
+		System.out.println("rp = "+ rp);
+		System.out.println("여기까지 옴");
+		
+		//세터를 이용하여 모델로 데이터 주입
+		user.setUserID(rp.get("userID").toString());
+		//user.setUserPassword(rp.get("userPassword").toString());
+		user.setUserPassword(encoder.encoding(rp.get("userPassword").toString()));
+		user.setUserName(rp.get("userName").toString());
+		user.setUserEmail1(rp.get("userEmail1").toString());
+		user.setUserEmail2(rp.get("userEmail2").toString());
+		user.setUserPhoneNumber(rp.get("userPhoneNumber").toString());
+		user.setUserAddress(rp.get("userAddress").toString());
+		user.setUserBirthYear(rp.get("userBirthYear").toString());
+		user.setUserBirthMonth(rp.get("userBirthMonth").toString());
+		user.setUserBirthDate(rp.get("userBirthDate").toString());
+		user.setUserBirthType(rp.get("userBirthType").toString());
+		user.setUserSex(rp.get("userSex").toString());
+		
+		
+		
+		//데이터 주입 확인
+		System.out.println("이름= "+ user.getUserName());
+		System.out.println("아뒤= "+ user.getUserID());
+		System.out.println("암호= "+ user.getUserPassword());
+		System.out.println("Email1= "+ user.getUserEmail1());
+		System.out.println("Email2= "+ user.getUserEmail2());
+		System.out.println("폰번= "+ user.getUserPhoneNumber());
+		System.out.println("태어난해= "+ user.getUserBirthYear());
+		System.out.println("태어난달= "+ user.getUserBirthMonth());
+		System.out.println("태어난일= "+ user.getUserBirthDate());
+		
+		System.out.println("birthtype= "+ user.getUserBirthType());
+		System.out.println("sex= "+ user.getUserSex());
+		System.out.println("goods= "+ user.getUserGoodsCount());
+		System.out.println("board= "+ user.getUserBoardCount());
+		System.out.println("order= "+ user.getUserOrderCount());
+		
+		
+		//성공이후 userService의 save를 이용하여 insert SQL명령 실행
+		userService.save(user);
+		
+		//성공여부에 따라 map으로 k와 v값을 각각 주입
+		if(user !=null)	map.put("success", "회원등록 성공");
+		else map.put("fail", "회원등록 실패");
+		
+		//클라이언트로 데이터를 보내기 위해 map과 callback을 전송하기 위해 mnv에 값 주입 후 리턴
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		return mnv;
+	}
+	
+	// 10.9 봉재 : 업데이트 전 아이디 바탕으로 유저정보 가져오기
+	
+	@RequestMapping("/user/getUserInfo.do")
+	public ModelAndView getUserInformation(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		
+		//생성자 : 기본 rp,mnv(리턴용), map 외에, userMap HashMap(실제 데이터 저장) 추가 
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> userMap = new HashMap<String, Object>();
+
+		
+		//체커 : 데이터가 잘 넘어오는지 확인 
+		System.out.println("-------------getUserInfo()--------------");
+		System.out.println("rp = " + rp);
+		
+		//데이터 주입 
+		User user = (User) this.userService.getObject(rp);
+		
+		//체커 : 데이터 모델로 주입 확인
+		System.out.println("이름= "+ user.getUserName());
+		System.out.println("아뒤= "+ user.getUserID());
+		System.out.println("암호= "+ user.getUserPassword());
+		System.out.println("Email1= "+ user.getUserEmail1());
+		System.out.println("Email2= "+ user.getUserEmail2());
+		System.out.println("폰번= "+ user.getUserPhoneNumber());
+		System.out.println("태어난해= "+ user.getUserBirthYear());
+		System.out.println("태어난달= "+ user.getUserBirthMonth());
+		System.out.println("태어난일= "+ user.getUserBirthDate());
+		
+		//모델에서 리턴을 위한 userMap으로 다시 주입(매핑)
+		if(user != null){
+			userMap.put("userName", user.getUserName());
+			userMap.put("userEmail1", user.getUserEmail1());
+			userMap.put("userEmail2", user.getUserEmail2());
+			userMap.put("userPhoneNumber", user.getUserPhoneNumber());
+			userMap.put("userAddress", user.getUserAddress());
+			userMap.put("userID", user.getUserID());
+			
+			map.put("success", userMap);
+		}else{
+			map.put("fail", "회원등록 실패");
+		}
+		
+		//mnv로 userMap을 가지고 있는 map을 전송 
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		return mnv;
+	}
+
+	// 10.9 봉재 - 유저정보 업데이트 누른다음 시작
+	@RequestMapping("/user/updateUserInfo.do")
+	public ModelAndView updateUserInformation(HttpServletRequest req, HttpServletResponse res) throws Exception {
+
+		//업데이트를 위한 기본 생성자
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		Map<String, Object> map = new HashMap<String, Object>();
+				
+		// 모델 생성
+		User user = new User();
+		
+		// json 체커
+		System.out.println("-------------updateUserInfo()--------------");
+		System.out.println("rp = "+ rp);
+		
+		
+		// 세터를 이용하여 모델로 데이터 주입
+		user.setUserID(rp.get("userID").toString());
+		user.setUserPassword(rp.get("userPassword").toString());
+		user.setUserEmail1(rp.get("userEmail1").toString());
+		user.setUserEmail2(rp.get("userEmail2").toString());
+		user.setUserPhoneNumber(rp.get("userPhoneNumber").toString());
+		user.setUserAddress(rp.get("userAddress").toString());
+				
+		// 체커 : 데이터 주입 확인
+		System.out.println("이름= "+ user.getUserName());
+		System.out.println("아뒤= "+ user.getUserID());
+		System.out.println("암호= "+ user.getUserPassword());
+		System.out.println("Email1= "+ user.getUserEmail1());
+		System.out.println("Email2= "+ user.getUserEmail2());
+		System.out.println("폰번= "+ user.getUserPhoneNumber());
+	
+		
+		// 주입 확인후 update SQL명령 실행
+		userService.update(user);
+		
+		// 성공여부에 따라 map으로 k와 v값을 각각 주입
+		
+		if(user !=null)	map.put("success", "회원업데이트 성공");
+		else map.put("fail", "회원업데이트 실패");
+		
+		// client로 리턴 : 클라이언트로 데이터를 보내기 위해 map과 callback을 전송하기 위해 mnv에 값 주입 후 리턴
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		return mnv;
+	}
+	
+	
+	// 10. 26. ID 중복 체크를 확인하기 위한 로직 
+	
+	@RequestMapping("/user/user_checkUniqueId.do")
+	public ModelAndView checkUniqueId(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		
+		//생성자 : 기본 rp,mnv(리턴용), map 외에, userMap HashMap(실제 데이터 저장) 추가 
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		Map<String, Object> map = new HashMap<String, Object>();
+							
+		//체커 : 데이터가 잘 넘어오는지 확인 
+		System.out.println("-------------getUserInfo()--------------");
+		System.out.println("rp = " + rp);
+		
+		//클라이언트로부터 파라미터 받은 ID를 저장 및 확인
+		String currentId = rp.get("userID").toString();
+		System.out.println("입력한 아뒤= "+ currentId);
+		
+		//클라이언트로 파라미터를 받은 것을 바탕으로 query 날려서 null 인지 아니면 값이 있는지를 확인
+		if(this.userService.getObjectForIdcheck(rp) == null)
+		{
+			System.out.println("null");
+			map.put("success", "동일 ID 없음");
+		
+		}else
+		{
+			System.out.println("동일 ID 있음");
+			map.put("fail", "동일 ID 있음");		
+		}
+		
+				
+		//mnv로 userMap을 가지고 있는 map을 전송 
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		return mnv;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* 백업용
+	
+	@RequestMapping("/user/getUser.do")
+	public ModelAndView getUser(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		Map<String, Object> map = new HashMap<String, Object>();
+//		Map<String, Object> userMap = new HashMap<String, Object>();
+		System.out.println(rp);
+		User user = (User) this.userService.getObject(rp);
+		
+		if(user != null){
+//			userMap.put("userSeq", user.getUserSeq());
+//			userMap.put("userEmail", user.getUserEmail());
+//			userMap.put("userName", user.getUserName());
+			
+			//세션처리 - html5 sessionStorage 이용
+
+			map.put("1", user);
+		}else{
+			map.put("-1", "사용자 불러오기 실패");
+		}
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		return mnv;
+	}
+	
+	*/
+	
+	
+	@RequestMapping("/user/test.do")
+	public ModelAndView test(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		Map<String, Object> map = new HashMap<String, Object>();
+//		Map<String, Object> userMap = new HashMap<String, Object>();
+		
+		System.out.println(rp);
+		
+		int num = Integer.parseInt((String) rp.get("testValue"));
+		
+		System.out.println("num : "+ num);
+		/*
+		User user = (User) this.userService.getObject(rp);
+		
+		if(user != null){
+//			userMap.put("userSeq", user.getUserSeq());
+//			userMap.put("userEmail", user.getUserEmail());
+//			userMap.put("userName", user.getUserName());
+			
+			//세션처리 - html5 sessionStorage 이용
+
+			map.put("1", user);
+		}else{
+			map.put("-1", "사용자 불러오기 실패");
+		}
+		mnv.addObject("map", map);
+		
+		mnv.addObject("callback", req.getParameter("callback"));
+		*/
+		
+		return mnv;
+	}
+	
+
+}

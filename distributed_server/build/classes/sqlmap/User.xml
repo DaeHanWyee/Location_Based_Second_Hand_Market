@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.ajou.secure.user">
+
+	<typeAlias alias ="RequestParameter" type="com.ajou.secure.common.RequestParameter"/>		
+	<typeAlias alias="user" type="com.ajou.secure.user.User"/>
+	
+	<resultMap class="user" id="userResult">
+		<result property="userNumSeq" column="USER_NUMSEQ"/>
+		<result property="userID" column="USER_ID"/>
+		<result property="userPassword" column="USER_PASSWORD"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userEmail1" column="USER_EMAIL1"/>
+		<result property="userEmail2" column="USER_EMAIL2"/>
+		<result property="userPhoneNumber" column="USER_PHONENUMBER"/>
+		<result property="userAddress" column="USER_ADDRESS"/>
+		<result property="userBirthYear" column="USER_BIRTHYEAR"/>
+		<result property="userBirthMonth" column="USER_BIRTHMONTH"/>
+		<result property="userBirthDate" column="USER_BIRTHDATE"/>
+		<result property="userBirthType" column="USER_BIRTHTYPE"/>
+		<result property="userSex" column="USER_SEX"/>
+		<result property="userGoodsCount" column="USER_GOODSCOUNT"/>
+		<result property="userOrderCount" column="USER_ORDERCOUNT"/>
+		<result property="userBoardCount" column="USER_BOARDCOUNT"/>
+		<result property="userRegdate" column="USER_REGDATE"/>
+		<result property="userAuthority" column="USER_AUTHORITY"/>
+		
+	</resultMap>
+	
+	<!-- 10.26. 봉재 : userID가 중복성 검사를 위한 result map 생성 -->
+	<resultMap class="user" id="userIDResult">
+		<result property="userID" column="USER_ID"/>
+	</resultMap>
+	
+	<!-- 10.8. 봉재 : iBatis insert 쿼리 구문 추가(여기에 양력/음력 및 남자/여자 내용은 빠져 있음) -->
+	<insert id="InsertUserInformation" parameterClass="user">
+		INSERT INTO	TBL_USER_INFO
+			(USER_ID, 
+			USER_PASSWORD, 
+			USER_NAME, 
+			USER_EMAIL1, 
+			USER_EMAIL2, 
+			USER_PHONENUMBER, 
+			USER_ADDRESS, 
+			USER_BIRTHYEAR, 
+			USER_BIRTHMONTH, 
+			USER_BIRTHDATE, 
+			USER_BIRTHTYPE,
+			USER_SEX,  
+			USER_REGDATE)	
+		VALUES
+			(#userID#, 
+			#userPassword#, 
+			#userName#, 
+			#userEmail1#, 
+			#userEmail2#, 
+			#userPhoneNumber#, 
+			#userAddress#, 
+			#userBirthYear#, 
+			#userBirthMonth#, 
+			#userBirthDate#,
+			#userBirthType#,
+			#userSex#, 
+			NOW())	
+	</insert>
+
+	<select id="selectUserLogin" parameterClass="RequestParameter" resultMap="userResult">
+		SELECT
+			*
+		FROM
+			TBL_USER_INFO
+		WHERE
+			USER_ID = #userID# and USER_PASSWORD = #userPassword#
+		
+	</select>
+
+	<!--  10.9 봉재 : ID를 바탕으로 사용자 정보를 호출하는 쿼리 -->
+	<select id="selectUserByUserID" parameterClass="RequestParameter" resultMap="userResult">
+		SELECT
+			*
+		FROM
+			TBL_USER_INFO
+		WHERE
+			USER_ID = #userID#
+		
+	</select>
+	
+	<!--  11.12 병욱 : 권한을 바탕으로 사용자 정보를 호출하는 쿼리 -->
+	<select id="selectUserByUserAuthority" parameterClass="java.util.Map" resultMap="userResult">
+		SELECT
+			*
+		FROM
+			TBL_USER_INFO
+		WHERE
+			USER_AUTHORITY != #userAuthority#
+			LIMIT #start#, #end#;
+		
+	</select>
+	
+	<!--  10.9 봉재 : 업데이트 쿼리 완료-->
+	<update id="updateUserInfo" parameterClass="user">
+		UPDATE TBL_USER_INFO
+		SET
+			USER_PASSWORD = #userPassword#,
+			USER_EMAIL1 = #userEmail1#, 
+			USER_EMAIL2 = #userEmail2#, 
+			USER_PHONENUMBER = #userPhoneNumber#, 
+			USER_ADDRESS = #userAddress#
+		WHERE 
+			USER_ID = #userID#
+		
+	</update>
+	
+	<!--  11.12 병욱 : 권한 업데이트 쿼리 완료
+	<update id="updateUserAuthority" parameterClass="user">
+		UPDATE TBL_USER_INFO
+		SET
+			USER_AUTHORITY = #userAuthority#,
+		WHERE 
+			USER_ID = #userID#
+		
+	</update>
+	-->
+	
+	
+	<!--  11.12 병욱 : 권한 업데이트 쿼리 완료
+	<update id="updateUserAuthority" parameterClass="Integer">
+		UPDATE TBL_USER_INFO
+		SET
+			USER_AUTHORITY = #userAuthority#
+		<dynamic prepend="WHERE">
+		<iterate property="USER_NUMSEQ" open="(" conjunction="," close=")">
+		#[]#
+		</iterate>
+		</dynamic>
+	</update>
+	-->
+	
+	
+	<update id="updateUserAuthority" parameterClass="java.util.Map">
+		UPDATE TBL_USER_INFO
+		SET
+			USER_AUTHORITY = #userAuthority#
+		<iterate open="WHERE USER_NUMSEQ IN (" conjunction="," close=")" property="seqs">
+		#seqs[]#
+		</iterate>
+	</update>
+	
+	<update id="updateUserAuthorityByUserId" parameterClass="java.util.Map">
+		UPDATE TBL_USER_INFO
+		SET
+			USER_AUTHORITY = 2
+		WHERE USER_ID = #userID#
+	</update>
+	
+	
+	<!--  10.9 병욱 : ID중복 체크 테이블 내에 아이디 있나 확인 -->
+	<select id="selectCheckUserIDByUserID" parameterClass="RequestParameter" resultMap="userIDResult">
+		SELECT
+			USER_ID
+		FROM
+			TBL_USER_INFO
+		WHERE
+			USER_ID = #userID#
+		
+	</select>
+	
+	<!--  10.9 병욱 : ID팢기 -->
+	<select id="selectFindUserIDByUserInfo" parameterClass="RequestParameter" resultMap="userResult">
+		SELECT
+			USER_ID
+		FROM
+			TBL_USER_INFO
+		WHERE
+			USER_NAME = #userName# and USER_PHONENUMBER = #userPhoneNumber# and USER_BIRTHYEAR = #userBirthYear# and USER_BIRTHMONTH = #userBirthMonth# and USER_BIRTHDATE = #userBirthDate#
+		
+	</select>
+
+	<!--  10.27 병욱 : 회원삭제 -->
+	<delete id="deleteUser" parameterClass="user">
+		DELETE FROM `tbl_user_info`
+		WHERE `USER_ID` = #userID# and `USER_PASSWORD` = #userPassword#
+	</delete>
+	
+	<select id="selectRowCount" resultClass="int">
+			SELECT COUNT(*) as CNT FROM TBL_USER_INFO WHERE USER_AUTHORITY!=0
+	</select>
+
+</sqlMap>
+
+
+
+
+
+
+
+
+
+
+

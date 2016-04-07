@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+ <title>게시판</title>
+    <script type="text/javascript" src="/secure_client/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="/secure_client/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/secure_client/js/jquery.popupWindow.js"></script>
+ </head>
+ <script type="text/javascript">
+ var map = [{'num':'1','title':'aa','writer':'aaa','date':'aaaa','hit':'0','content':'aaaaaaaaaaaaaaa'},
+			{'num':'2','title':'bb','writer':'bbb','date':'bbbb','hit':'1','content':'bbbbbbbbbbbbbbb'},
+			{'num':'3','title':'cc','writer':'ccc','date':'cccc','hit':'2','content':'ccccccccccccccc'}];
+var url      = window.location.href; 
+var tmpArr = url.split("?");
+var tmp1Arr = tmpArr[1].split("=");
+var num = tmp1Arr[1];
+
+function loadData(){
+	$("#num").text(map[num-1]["num"]);
+	$("#title").text(map[num-1]["title"]);
+	$("#name").text(map[num-1]["writer"]);
+	$("#reg").text(map[num-1]["date"]);
+	$("#hit").text(map[num-1]["hit"]);
+	$("#content").text(map[num-1]["content"]);	
+ }
+
+function moveList()
+{
+location.href="board.html";
+}
+
+function moveMod()
+{
+location.href="mod.html?num="+map[num-1]["num"];
+}
+
+
+ </script>
+ <body onload="loadData()">
+<table>
+  <tr>
+   <td>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+     <tr style="background:url('img/table_mid.gif') repeat-x; text-align:center;">
+      <td width="5"><img src="img/table_left.gif" width="5" height="30" /></td>
+      <td>내 용</td>
+      <td width="5"><img src="img/table_right.gif" width="5" height="30" /></td>
+     </tr>
+    </table>
+   <table width="413">
+     <tr>
+      <td width="0">&nbsp;</td>
+      <td align="center" width="76">글번호</td>
+      <td width="319" id="num"></td>
+      <td width="0">&nbsp;</td>
+     </tr>
+	 <tr height="1" bgcolor="#dddddd"><td colspan="4" width="407"></td></tr>
+    <tr>
+      <td width="0">&nbsp;</td>
+      <td align="center" width="76">조회수</td>
+      <td width="319" id="hit"></td>
+      <td width="0">&nbsp;</td>
+     </tr>
+	 <tr height="1" bgcolor="#dddddd"><td colspan="4" width="407"></td></tr>
+    <tr>
+      <td width="0">&nbsp;</td>
+      <td align="center" width="76">이름</td>
+      <td width="319" id="name"></td>
+      <td width="0">&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4" width="407"></td></tr>
+    <tr>
+      <td width="0">&nbsp;</td>
+      <td align="center" width="76">작성일</td>
+      <td width="319" id="reg"></td>
+      <td width="0">&nbsp;</td>
+     </tr>
+      <tr height="1" bgcolor="#dddddd"><td colspan="4" width="407"></td></tr>
+    <tr>
+      <td width="0">&nbsp;</td>
+      <td align="center" width="76">제목</td>
+      <td width="319" id="title"></td>
+      <td width="0">&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4" width="407"></td></tr>
+                <tr>
+      <td width="0">&nbsp;</td>
+                   <td width="399" colspan="2" height="200" id="content">
+                </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4" width="407"></td></tr>
+     <tr height="1" bgcolor="#82B5DF"><td colspan="4" width="407"></td></tr>
+     <tr align="center">
+      <td width="0">&nbsp;</td>
+      <td colspan="2" width="399">
+	<input type=button value="목록" onclick="moveList()">
+	<input type=button value="수정" onclick="moveMod()">
+	<input type=button value="삭제">
+      <td width="0">&nbsp;</td>
+     </tr>
+    </table>
+   </td>
+  </tr>
+ </table>
+</body>
+ </html>

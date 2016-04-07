@@ -1,0 +1,22 @@
+package com.ajou.secure.boardOption;
+
+public class BoardOption {
+	
+	private String boardType;
+	private int boardCount;
+	
+	
+	public String getBoardType() {
+		return boardType;
+	}
+	public void setBoardType(String boardType) {
+		this.boardType = boardType;
+	}
+	public int getBoardCount() {
+		return boardCount;
+	}
+	public void setBoardCount(int boardCount) {
+		this.boardCount = boardCount;
+	}
+	
+}

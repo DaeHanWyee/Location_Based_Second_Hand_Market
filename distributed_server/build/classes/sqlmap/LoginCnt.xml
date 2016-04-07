@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.ajou.secure.loginCnt">
+
+	<typeAlias alias ="RequestParameter" type="com.ajou.secure.common.RequestParameter"/>		
+	<typeAlias alias="loginCnt" type="com.ajou.secure.loginCnt.LoginCnt"/>
+	
+	<resultMap class="loginCnt" id="loginCntResult">
+		<result property="loginNumSeq" column="LOGIN_NUMSEQ"/>
+		<result property="loginID" column="LOGIN_ID"/>
+		<result property="loginCount" column="LOGIN_COUNT"/>
+		
+	</resultMap>
+	
+	
+	<!-- 15.12.07. 병욱 : iBatis insert 쿼리 구문 추가(처음 login 실패시 추가, login_count는 디폴트 값으로 1 생성) -->
+	<insert id="InsertLoginCntInformation" parameterClass="loginCnt">
+		INSERT INTO	TBL_LOGIN_CNT
+			(LOGIN_ID)
+		VALUES
+			(#loginID#)	
+	</insert>
+
+	<!-- 15.12.07. 병욱 : 이전 로그임 실패 기록 검색 userID로 검색해야 하나?? -->
+	<select id="selectLoginCnt" parameterClass="RequestParameter" resultMap="loginCntResult">
+		SELECT
+			*
+		FROM
+			TBL_LOGIN_CNT
+		WHERE
+			LOGIN_ID = #userID#
+		
+	</select>
+
+
+	<!--  15.12.07. 병욱 : 로그인 실패시, 이전 기록에 로그인 실패 경험 있을 시, login_count 1 증가-->
+	<update id="updateLoginCount" parameterClass="loginCnt">
+		UPDATE TBL_LOGIN_CNT
+		SET
+			LOGIN_COUNT = LOGIN_COUNT + 1
+		WHERE 
+			LOGIN_ID = #loginID#
+		
+	</update>
+	
+	
+	<!--  15.12.07. 병욱 : 관리자로 부터 새로운 권한을 인증 받아 로그인 log 삭제 시 -->
+	<delete id="deleteLoginCnt" parameterClass="RequestParameter">
+		DELETE FROM TBL_LOGIN_CNT
+		WHERE LOGIN_ID = #userID#
+	</delete>
+
+</sqlMap>

@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+ 
+	<head>
+		<meta charset="UTF-8">
+    	<link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    	<!-- <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css"> -->
+    	<link rel="stylesheet" href="/css/main.css">
+    	<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		
+		<title>게시판</title>
+<script type="text/javascript" src="../js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../js/addScript.js"></script>
+<script type="text/javascript" src="../js/jquery.popupWindow.js"></script>
+<script type="text/javascript" src="../js/infobee.common.js"></script>
+
+ <script type="text/javascript">
+ 
+ var html = '<table width="100%" cellpadding="0" cellspacing="0" border="0">';
+		html += '<tr height="5"><td width="5"></td></tr>';
+		html += '<tr style="background:url('+'img/table_mid.gif'+') repeat-x; text-align:center;">';
+		html += '<td width="5"><img src="img/table_left.gif" width="5" height="30" /></td>';
+		html += '<td width="73">번호</td>';
+		html += '<td width="379">제목</td>';
+		html += '<td width="73">작성자</td>';
+		html += '<td width="164">작성일</td>';
+		html += '<td width="58">추천</td>';
+		html += '<td width="58">조회</td>';
+		html += '<td width="7"><img src="img/table_right.gif" width="5" height="30" /></td>';
+		html += '</tr>';
+
+ 
+ var domainText = getDomain();
+ 
+ function getDomain() {
+	 return "localhost:8080";
+ }
+ 
+ function getForumRow() {
+	 
+	 var userId = "neogeoss";
+	 var passwd = "1311";
+	 
+	 //Map<String, Object> myMap = new HashMap<String, Object>();
+	 
+	// var row = document.getElementById("1stRow");
+	 
+	 var params = "userId="+userId+"&userPassword="+passwd;
+	 
+	 $.ajax({
+		 type: "POST",
+		 url: "http://"+domainText+"/secure_server/test/test.do",
+		 callback: "callback",
+		 dataType: "jsonp",
+		 data:params,
+		 success: function(data) {
+			 var htmlInner = html;
+			 var myMap = new Map();
+			 $.each(data, function(k, v){
+//				 if(k=="num")
+				
+				if(k=="success"){
+					console.log("v="+v["num"]);
+					 htmlInner += "<tr height='25' align='center'>"
+		        			htmlInner += "<td>&nbsp;</td>";
+								htmlInner += "<td>"+v['num']+"</td>";
+								htmlInner += "<td align='left' onclick=\"window.location='writingViewer.jsp'\">"+v['title']+"</td>";
+								htmlInner += "<td align='center'>"+v['writer']+"</td>";
+								htmlInner += "<td align='center'>"+v['date']+"</td>";
+								htmlInner += "<td align='center'>"+v['like']+"</td>";
+								htmlInner += "<td align='center'>"+v['open']+"</td>";
+								htmlInner += "<td>&nbsp;</td>";
+								htmlInner += "</tr>";
+								htmlInner += "<tr height='1' bgcolor='#D2D2D2'><td colspan='8'></td></tr>";
+								htmlInner += "<tr height='1' bgcolor='#82B5DF'><td colspan='8' width='752'></td></tr>";
+
+				}
+
+				
+				 
+				 
+				 
+				 });
+			        htmlInner += '</table>';
+
+					$("#list").html(htmlInner);
+
+					$("#test").attr("disabled", true);
+
+					 
+				 
+				/* if(myMap.get("번호")){
+				 	row.insertCell(myMap.get("번호")).style.width = "73";
+				 } else if (myMap.get("글쓴이")) {
+					row.insertCell(myMap.get("글쓴이")).style.width = "73"; 
+				 } else if (myMap.get("제목")) {
+					row.insertCell(myMap.get("제목")).style.width = "379";
+				 } else if (myMap.get("등록일")) {
+					row.insertCell(myMap.get("등록일")).style.width = "164";  
+				 } else if (myMap.get("추천")) {
+					 row.insertCell(myMap.get("추천")).style.width = "58";  
+				 } else if (myMap.get("조회")) {
+					 row.insertCell(myMap.get("조회")).style.width = "58";
+				 }*/
+				 
+			 }
+		 });
+	}
+ function init(){
+		var htmlInner = html;
+
+		htmlInner += '<tr align="center" bgcolor="#FFFFFF" height="30">'
+		htmlInner += '<td colspan="6">등록된 글이 없습니다.</td>'
+		htmlInner += '</tr>'
+		htmlInner += '<tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>'
+		htmlInner += '<tr height="1" bgcolor="#82B5DF"><td colspan="6" width="752"></td></tr>'
+		htmlInner += '</table>'
+
+		$("#list").html(htmlInner);
+		$("#test").attr("disabled", false);
+
+	}
+
+ 
+ 
+ </script>
+		
+		<style>
+			header{
+				width: 100%;
+				position: fixed; 
+				top: 0;
+				height: 60px !important;
+				opacity:.8;
+			}
+
+			.nav2 a {
+			  color: #5a5a5a;
+			  font-size: 11px;
+			  font-weight: bold;
+			  padding: 14px 10px;
+			  text-transform: uppercase;
+			}
+			
+			.nav2 a {
+			    display: inline;
+			}
+			
+			.nav2 a li {
+				display: inline;
+			}
+			
+			.mainframe {
+				padding-top: 400px;
+			}			
+			
+			#search .container {
+				width: 100px;
+				height: 20px;
+			}
+			
+			#footer {
+				padding-top: 600px;
+			}
+			
+			.footMenu .container {
+			    max-width: 940px;
+			    margin: 0 auto;
+			    padding: 0 10px;
+			}
+
+			.footMenu li {
+			    color: black;
+			    font-size: 20;
+			    font-weight: bold;
+			    padding top 18px;
+			    display: inline;
+			}
+			
+			.footMenu .container a {
+			    color: black;
+			}
+			
+			.etc .container {
+			    max-width: 940px;
+			    margin: 0 auto;
+			    padding-right: 50px;
+			}
+			
+			.logo {
+			    padding-left: 330px;
+			}
+			
+			.logo a {
+			    color: black;
+			}
+			
+			.logo b {
+			    color: black;
+			}
+			
+			.address {
+			    padding-left: 660px;
+			}					
+			
+
+
+		</style>
+
+</head>
+
+<body onload="javascript:getForumRow()">
+	<header>
+		<div class="PPOMPPU">
+			<div class="container">
+				<h1>PPOMPPU</h1>
+				<p>사람이 좋아 함께하는 곳..뽐뿌!</p>
+			</div>
+		</div>
+		<div class="nav2">
+			<ul class="pull-left">
+				<a href="http://localhost:8080/secure_client/web/main/main2.html#"><li>뽐뿌</li></a>
+				<a href="#"><li>이벤트</li></a>
+				<a href="#"><li>정보</li></a>
+				<a href="http://localhost:8080/secure_client/web/main/freeBulletinBoard.html"><li>커뮤니티</li></a>
+				<a href="#"><li>갤러리</li></a>
+				<a href="http://localhost:8080/secure_client/web/main/marketPlaceBulletinBoard.html"><li>장터</li></a>
+				<a href="#"><li>포럼</li></a>
+				<a href="#"><li>소셜커머스</li></a>
+			</ul>
+			<ul class="pull-right">
+				<a href="#"><li>회원가입</li></a>
+				<a href="#"><li>로그인</li></a>
+				<a href="#"><li>Help</li></a>
+			</ul>
+		</div>
+	</header>
+	
+	<div class="mainframe">
+		<div id="search">
+			<div class="container">
+				<p>검색창</p>
+			</div>
+		</div>
+		
+		<div class="information">
+			<h2>자유게시판입니다.</h2>
+			<p>미풍양속을 해치지 않는 범위 내에서 자유롭게 작성해주세요.</p>
+			<p>단, 정치와 관련된 이야기는 이슈정치토론 게시판, 질문글은 질문/요청게시판을 이용해주세요</p>
+			<p>상습적인 분란 조장 글을 작성하거나 지역감정 유발, 성별 비하발언 활동은 제재가 진행됩니다.</p>
+			<p>뉴스 게시물에 대한 가이드라인 - 참고해주세요</p>
+		</div>
+	</div>
+	
+	 <div id="list">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr height="5"><td width="5"></td></tr>
+ <tr style="background:url('img/table_mid.gif') repeat-x; text-align:center;">
+   <td width="5"><img src="img/table_left.gif" width="5" height="30" /></td>
+   <td width="73">번호</td>
+   <td width="73">글쓴이</td>
+   <td width="379">제목</td>
+   <td width="164">등록일</td>
+   <td width="58">추천</td>
+   <td width="58">조회</td>
+   <td width="7"><img src="img/table_right.gif" width="5" height="30" /></td>
+  </tr>
+<tr height="25" align="center">
+</tr>
+  <tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>
+  
+  <tr id="1stRow">
+ 
+  </tr>
+  
+
+ <tr height="1" bgcolor="#82B5DF"><td colspan="8" width="752"></td></tr>
+ </table>
+ </div>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr><td colspan="4" height="5"></td></tr>
+  <tr align="center">
+   <td><input type=button value="글쓰기" OnClick="window.location='boardWrite.jsp'"></td>
+  </tr>
+</table>
+	
+	<div id="footer">
+	   <div class="footMenu">
+	       <div class="container">
+	           <ul>
+	               <li>
+	                   <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=faq">사이트소개/FAQ</a>
+	               </li>
+	               <li>
+	                   <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=propose">운영참여게시판</a>
+	               </li>
+	               <li>
+	               <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=apply">포럼지원센터</a>
+	               </li>
+	               <li>
+	                   <a href="#">마이페이지</a>
+	               </li>
+	               <li>
+	                   <a href="#">나만의공간</a>
+	               </li>
+	               <li>
+	                   <a href="http://www.ppomppu.co.kr/recruit.php">인재채용</a>
+	               </li>
+	           </ul>
+	       </div>
+	   </div>
+	   <div class="logo">
+	       <p class="logo">
+	           <a href="http://www.ppomppu.co.kr/index.php"><img src="http://www.ppomppu.co.kr/images/main/201111/footer_logo_01.jpg" alt="뽐뿌" /></a>
+	       </p>
+	       <p class="etc">
+	           <div class="container">
+	               <ul class="pull-right">
+	                   <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=dup">중복게시판</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+	                   <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&no=3"><span style="color:#527bc2"><b>개인정보취급방침</b></span></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+	                    <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&page=2&divpage=1&no=5">청소년보호정책</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+	                    <a href="http://www.ppomppu.co.kr/zboard/view.php?id=faq&no=17">광고/제휴 안내</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+	                    <a href="mailto:webmaster@ppomppu.co.kr">메일문의 (<em>webmaster@ppomppu.co.kr</em>)</a>
+	                </ul>
+	            </div>
+	        </p>
+	    </div>
+	</div>
+	
+	
+	<div class="address">
+	    <p>Copyright 2005-2015 <strong>ppomppu</strong>. All rights reserved</p>
+	</div>
+	
+
+</body>
+</html>

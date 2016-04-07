@@ -1,0 +1,114 @@
+package com.ajou.secure.goods;
+
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.ajou.secure.board.Board;
+import com.ajou.secure.common.BaseDao;
+import com.ajou.secure.common.Dao;
+import com.ajou.secure.common.RequestParameter;
+
+
+@Repository("goodsDao")
+public class GoodsDaoImpl extends BaseDao implements Dao {
+ 
+	@Override
+	public Object select(Object obj) throws SQLException {
+		return getSqlMapClientTemplate().queryForObject("com.ajou.secure.goods.selectGoodsBySeq", obj);
+	}
+
+	@Override
+	public void delete(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		getSqlMapClientTemplate().delete("com.ajou.secure.goods.deleteGoodsInfo", obj);
+		
+	}
+
+	@Override
+	public List getList(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getRowCount(Object obj) throws SQLException {
+		return 0;
+	}
+
+	@Override
+	public void insert(Object obj) throws SQLException {
+		// spring 프레임워크의 SqlMapClientTemplate 호출후 MySQL insert 구문 입력을 위해 User.xml의 InsertUserInformation 호출
+		// obj는 user 모델에서 가져옴
+		getSqlMapClientTemplate().insert("com.ajou.secure.user.InsertBoardInformation", obj);
+	}
+
+	@Override
+	public void update(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		getSqlMapClientTemplate().update("com.ajou.secure.user.updateUserInfo", obj);
+	}
+	
+	public Object login(Object obj) throws SQLException {
+		return getSqlMapClientTemplate().queryForObject("com.ajou.secure.user.selectUserLogin", obj);
+	}
+	
+	public int insertCheck(Object obj) throws SQLException {
+		return (int)getSqlMapClientTemplate().insert("com.ajou.secure.goods.InsertGoodsInformation", obj);
+	}                
+
+	public int updateCheckForWrite(Object obj) throws SQLException {
+		return (int)getSqlMapClientTemplate().update("com.ajou.secure.goods.UpdateCheckForWrite", obj);
+	}   
+	
+	public List<Goods> getListByPage(Object obj) throws SQLException {
+		// spring 프레임워크의 SqlMapClientTemplate 호출후 MySQL insert 구문 입력을 위해 User.xml의 InsertUserInformation 호출
+		// obj는 user 모델에서 가져옴
+		return (List<Goods>)getSqlMapClientTemplate().queryForList("com.ajou.secure.goods.selectListByPage", obj);
+	} 
+
+	public int updateCheck(Object obj) throws SQLException {
+		return (int)getSqlMapClientTemplate().update("com.ajou.secure.goods.updateGoodsInfo", obj);
+	}
+
+	public List<Goods> getCommentList(String goodsUpper) throws SQLException {
+		return (List<Goods>)getSqlMapClientTemplate().queryForList("com.ajou.secure.goods.selectCommentList", goodsUpper);
+	}
+	
+	public void deleteStep1(Object obj) {
+		// TODO Auto-generated method stub
+		getSqlMapClientTemplate().delete("com.ajou.secure.goods.deleteCommentRelatedToGoodsCommentInfo", obj);
+	}
+	
+	public int insertCommentCheck(Object obj) {
+		// TODO Auto-generated method stub
+		return (int)getSqlMapClientTemplate().update("com.ajou.secure.goods.InsertGoodsCommentInformation", obj);
+	}
+	
+	public void deleteAllComment(Object obj) {
+		// TODO Auto-generated method stub
+		getSqlMapClientTemplate().delete("com.ajou.secure.goods.deleteCommentRelatedToGoodsInfo", obj);
+	}
+	
+	public void updateUserBoardCountFall(String boardWriter) {
+		// TODO Auto-generated method stub
+		getSqlMapClientTemplate().update("com.ajou.secure.goods.updateUserGoodsCountFall", boardWriter);
+	}
+
+	public String selectPhone(RequestParameter rp) {
+		// TODO Auto-generated method stub
+		return (String) getSqlMapClientTemplate().queryForObject("com.ajou.secure.goods.selectUserPhone", rp);
+	}
+	
+	public void boardSetRecommand(RequestParameter rp) {
+		// TODO Auto-generated method stub
+		getSqlMapClientTemplate().update("com.ajou.secure.goods.updateGoodsRecommadation", rp);
+	}
+
+	public int goodsCount(RequestParameter rp) {
+		// TODO Auto-generated method stub
+		return (int) getSqlMapClientTemplate().queryForObject("com.ajou.secure.goods.selectRowCount", rp);
+	} 
+}

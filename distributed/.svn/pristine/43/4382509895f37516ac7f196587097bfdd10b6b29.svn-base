@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+
+<head>
+<meta charset="UTF-8">
+	<link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+	<link rel="stylesheet" href="../css/main.css">
+	<link href="../css/temp_style.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script type="text/javascript" src="../../js/jquery-1.5.2.min.js"></script>
+	<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../js/addScript.js"></script>
+	<script type="text/javascript" src="../../js/jquery.popupWindow.js"></script>
+	<script type="text/javascript" src="./js/common.js"></script>
+	<script type="text/javascript" src="./js/goods.js"></script>
+	
+</head>
+
+<body onload="goods_write_load()">
+
+	<div class="PPOMPPU">
+		<div class="container">
+			<h1>PPOMPPU</h1>
+			<p>사람이 좋아 함께하는 곳..뽐뿌!</p>
+		</div>
+	</div>
+	<div class="nav2">
+		<div class="container">
+			 <ul class="pull-left">
+	            <a href="main.html"><li>뽐뿌</li></a>
+	            <a href="#"><li>이벤트</li></a>
+	            <a href="#"><li>정보</li></a>
+	            <a href="boardListPage.html"><li>커뮤니티</li></a>
+	            <a href="#"><li>갤러리</li></a>
+	            <a href="goodsListPage.html"><li>장터</li></a>
+	            <a href="#"><li>포럼</li></a>
+	            <a href="#"><li>소셜커머스</li></a>
+	        </ul>
+			<ul class="pull-right" id="non_member">
+	          <a href="userRegistrationPage.html"><li>회원가입</li></a>
+	          <a href="userLoginPage.html"><li>로그인</li></a>
+	          <a href="#"><li>Help</li></a>
+	        </ul>
+	        <ul class="pull-right" id="member">
+	          <a href="userModifyPage.html"><li id="identify">님</li></a>
+	          <a href="#"><li onclick="logout()">로그아웃</li></a>
+ 	          <a href="#"><li>Help</li></a>
+	        </ul>
+		</div>
+	</div>
+	</br>
+
+
+	<div id="body" class="thumbnail">
+	<div class="container">
+<div class="postwriting">	
+		<table>
+  <tr>
+   <td>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+     <tr style="background:url('../src/img/table_mid.gif') repeat-x; text-align:center;">
+      <td width="5"><img src="../src/img/table_left.gif" width="5" height="30" /></td>
+      <td>글쓰기</td>
+      <td width="5"><img src="../src/img/table_right.gif" width="5" height="30" /></td>
+     </tr>
+    </table>
+   <table>
+     <tr>
+      <td>&nbsp;</td>
+      <td align="center">제품명</td>
+      <td><input name="title" size="50" maxlength="100" id="title"></td>
+      <td>&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td align="center">아이디</td>
+      <td><input name="name" size="50" maxlength="50" id="name" readonly></td>
+      <td>&nbsp;</td>
+     </tr>
+      <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+     <tr>
+      <td>&nbsp;</td>
+      <td align="center">재고수</td>
+      <td><input name="stockcount" size="50" maxlength="50" id="stockcount"></td>
+      <td>&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+     <tr>
+      <td>&nbsp;</td>
+      <td align="center">내용</td>
+      <td><textarea name="memo" cols="150" rows="13" id="content"></textarea></td>
+      <td>&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+     <tr height="1" bgcolor="#82B5DF"><td colspan="4"></td></tr>
+     <tr>
+     
+     <td colspan="6" height="50px">
+     <img src="../src/img/btn_photo_load.gif" style="margin-left:50px" width="115" height="22" style="cursor:hand;" />
+     <iframe id="hiddenFrame" name="hiddenFrame" style="height: 27px;border: 0px; margin-left:-150px" src="./fileUpload.html" scrolling="no"></iframe>
+     <div id="fileboxes">
+	</div>
+     </td>
+     
+     </tr>
+ <tr><td></br></td></tr>
+                            <tr align="center">
+                                <td>&nbsp;</td>
+                                <td colspan="2">
+                                    <button type="button" class="btn btn-primary" onclick="write_check('0');">등록</button>
+                                    <button type="button" class="btn btn-primary" onclick="history.back()">취소</button>
+                                    <td>&nbsp;</td>
+                            </tr>
+ </table>
+	 </div>
+	 </div>
+	</div>
+	
+	<div id="foot" class="logo" >
+              <p class="etc">
+                <div class="container">
+                    <ul class="pull-right">
+                    <a href="http://www.ppomppu.co.kr/index.php"><img src="http://www.ppomppu.co.kr/images/main/201111/footer_logo_01.jpg" alt="뽐뿌" /></a>
+                        <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=dup">중복게시판</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&no=3"><span style="color:#527bc2"><b>개인정보취급방침</b></span></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&page=2&divpage=1&no=5">청소년보호정책</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.ppomppu.co.kr/zboard/view.php?id=faq&no=17">광고/제휴 안내</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="mailto:webmaster@ppomppu.co.kr">메일문의 (<em>webmaster@ppomppu.co.kr</em>)</a>
+                    </ul>
+                </div>
+            </p>
+        </div>
+
+	<!-- 
+	<div class="apologize">
+		<div class="thumbnail">
+			<img
+				src="http://t1.daumcdn.net/thumb/T430x0ht.u/?fname=http://t1.daumcdn.net/news/201509/12/chosunbiz/20150912143002823kphf.jpg">
+		</div>
+	</div>
+	 -->
+</body>

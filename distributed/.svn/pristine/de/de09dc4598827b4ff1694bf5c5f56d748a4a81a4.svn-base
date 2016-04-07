@@ -1,0 +1,399 @@
+package com.ajou.secure.goods;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONObject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ajou.secure.attachfile.AttachFile;
+import com.ajou.secure.attachfile.AttachFileServiceImpl;
+import com.ajou.secure.common.RequestParameter;
+import com.ajou.secure.common.Utils;
+
+@Controller
+public class GoodsController {
+	
+	@Resource(name = "goodsService")
+	private GoodsServiceImpl goodsService;
+	
+	@Resource(name = "attachFileService")
+	private AttachFileServiceImpl attachFileService;
+
+	
+	
+	@RequestMapping("/goods/goods_write.do")
+	public ModelAndView goodsWrite(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> boardMap = new HashMap<String, Object>();
+		
+		Goods goods = new Goods();
+		
+		goods.setGoodsContents(rp.get("goodsContents").toString());
+		goods.setGoodsSubject(rp.get("goodsSubject").toString());
+		goods.setGoodsStockcount(Integer.parseInt(rp.get("goodsStockcount").toString()));
+		goods.setGoodsWriter(rp.get("goodsWriter").toString());
+		
+		
+		int saveCheckRet = this.goodsService.saveCheck(goods);
+		System.out.println("saveCheckRet = "+ saveCheckRet);
+		
+		int updateCheckRet= this.goodsService.updateCheckForWrite(goods);
+		System.out.println("updateCheckRet = " + updateCheckRet);		
+		
+		if(goods != null){
+			map.put("success", saveCheckRet);
+		}else{
+			map.put("fail", "게시판 등록 실패");
+		}
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	
+	@RequestMapping("/goods/goods_list.do")
+	public ModelAndView goodsList(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> goodsMap = new HashMap<String, Object>();
+		
+		Map<String, Integer> param = new HashMap<String, Integer>();
+		param.put("start", Integer.parseInt(rp.get("start").toString()));
+		param.put("end", Integer.parseInt(rp.get("end").toString()));
+		
+		ArrayList<Goods> goodsList = (ArrayList<Goods>) this.goodsService.getList(param);
+		
+		
+		
+		if(goodsList != null){
+			/*
+			userMap.put("userSeq", user.getUserNumSeq());
+			userMap.put("userEmail", user.getUserEmail1());
+			userMap.put("userName", user.getUserName());
+			*/
+			
+			//세션처리 - html5 sessionStorage 이용
+
+			map.put("success", goodsList);
+		}else{
+			map.put("fail", "가져오기 실패");
+		}
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	
+	@RequestMapping("/goods/goods_view.do")
+	public ModelAndView goodsView(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> boardMap = new HashMap<String, Object>();
+		
+		
+		Goods goods = (Goods) this.goodsService.getObject(rp);
+		
+		int attachSeq = goods.getGoodsNumSeq();
+		
+		if(goods != null){
+			/*
+			userMap.put("userSeq", user.getUserNumSeq());
+			userMap.put("userEmail", user.getUserEmail1());
+			userMap.put("userName", user.getUserName());
+			*/
+			
+			//세션처리 - html5 sessionStorage 이용
+			List<AttachFile> aList = this.attachFileService.getListBySellSeq(attachSeq);
+			
+			if(aList != null)
+				map.put("files", aList);
+
+			map.put("success", goods);
+		}else{
+			map.put("fail", "로그인 실패");
+		}
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	@RequestMapping("/goods/goods_update.do")
+	public ModelAndView goodsUpdate(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> goodsMap = new HashMap<String, Object>();
+		
+		Goods goods = new Goods();
+		
+		goods.setGoodsContents(rp.get("goodsContents").toString());
+		goods.setGoodsStockcount(Integer.parseInt(rp.get("goodsStockcount").toString()));
+		goods.setGoodsSubject(rp.get("goodsSubject").toString());
+		goods.setGoodsNumSeq(Integer.parseInt(rp.get("goodsNumSeq").toString()));
+		
+		int ret = this.goodsService.updateCheck(goods);
+		
+		System.out.println("ret = "+ ret);
+		
+		
+		if(ret > 0){
+			/*
+			userMap.put("userSeq", user.getUserNumSeq());
+			userMap.put("userEmail", user.getUserEmail1());
+			userMap.put("userName", user.getUserName());
+			*/
+			
+			//세션처리 - html5 sessionStorage 이용
+
+			map.put("success", goodsMap);
+		}else{
+			map.put("fail", "로그인 실패");
+		}
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	@RequestMapping("/goods/goods_remove.do")
+	public ModelAndView goodsRemove(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		this.goodsService.remove(rp);
+		
+		this.goodsService.removeAllComment(rp);
+		this.goodsService.remove(rp);
+		this.goodsService.updateUserBoardCountFall(rp.get("goodsWriter").toString());
+		
+
+		map.put("success", "success");
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	@RequestMapping("/goods/goods_comment_list.do")
+	public ModelAndView goodsCommentList(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> goodsMap = new HashMap<String, Object>();
+		
+		String goodsUpper = rp.get("goodsUpper").toString();
+		ArrayList<Goods> goodsList = (ArrayList<Goods>) this.goodsService.getCommentList(goodsUpper);
+		
+		if(goodsList != null){
+			/*
+			userMap.put("userSeq", user.getUserNumSeq());
+			userMap.put("userEmail", user.getUserEmail1());
+			userMap.put("userName", user.getUserName());
+			*/
+			
+			//세션처리 - html5 sessionStorage 이용
+
+			map.put("success", goodsList);
+		}else{
+			map.put("fail", "로그인 실패");
+		}
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+
+	
+	@RequestMapping("/goods/goods_comment_write.do")
+	public ModelAndView goodsCommentWrite(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Goods goods = new Goods();
+		
+		goods.setGoodsContents(rp.get("goodsContents").toString());
+		goods.setGoodsSubject("comment");
+		goods.setGoodsWriter(rp.get("goodsWriter").toString());
+		goods.setGoodsStep(Integer.parseInt(rp.get("goodsStep").toString()));
+		goods.setGoodsUpper(Integer.parseInt(rp.get("goodsUpper").toString()));
+		goods.setGoodsRootUpper(Integer.parseInt(rp.get("goodsRootUpper").toString()));
+		
+
+		int ret = this.goodsService.saveCheckComment(goods);
+		
+		System.out.println("ret = "+ ret);
+		
+		
+		if(ret > 0){
+			map.put("success", "success");
+		}else{
+			map.put("fail", "로그인 실패");
+		}
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		//System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+
+	
+	@RequestMapping("/goods/goods_comment_remove.do")
+	public ModelAndView goodsCommentRemove(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> goodsMap = new HashMap<String, Object>();
+		
+		int step = Integer.parseInt(rp.get("step").toString());
+		
+		System.out.println("step = "+ step);
+		
+		if(step == 2)
+			this.goodsService.remove(rp);
+		
+		else if(step == 1){
+			Goods goods = (Goods) this.goodsService.getObject(rp);
+			System.out.println("STEP1. goodsNumSeq = "+ goods.getGoodsNumSeq());
+			rp.put("goodsUpperSeq", goods.getGoodsNumSeq());
+			this.goodsService.removeStep1(rp);
+			System.out.println("STEP2=======================================================.");
+			
+			this.goodsService.remove(rp);
+			System.out.println("STEP3==============================================================.");
+		}
+		
+
+		map.put("success", "success");
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	@RequestMapping("/goods/goods_get_phone.do")
+	public ModelAndView boardCommentList(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> goodsMap = new HashMap<String, Object>();
+		
+		String phone = this.goodsService.getPhone(rp);
+		
+		map.put("success", phone);
+
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	@RequestMapping("/goods/goods_recommand.do")
+	public ModelAndView goodsRecommand(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		goodsService.setRecommand(rp);
+
+		map.put("success", "success");
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+	
+	@RequestMapping("/goods/goods_count.do")
+	public ModelAndView goodsCount(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		int count = this.goodsService.getGoodsCount(rp);
+		
+		System.out.println("count = "+ count);
+		
+		if(count > 0)
+			map.put("success", count);
+		else
+			map.put("fail", 1);
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		System.out.println("mnv = "+ mnv);
+		return mnv;
+	}
+}
+
+

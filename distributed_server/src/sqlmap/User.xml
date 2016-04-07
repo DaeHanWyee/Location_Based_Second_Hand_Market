@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="com.ajou.secure.user">
+	<typeAlias alias ="RequestParameter" type="com.ajou.secure.common.RequestParameter"/>		
+	<typeAlias alias="user" type="com.ajou.secure.user.User"/>
+	
+	<resultMap class="user" id="userResult">
+		<result property="userID" column="USER_ID"/>
+		<result property="userPassword" column="USER_PASSWORD"/>
+		<result property="userName" column="USER_NAME"/>
+		<result property="userEmail1" column="USER_EMAIL1"/>
+		<result property="userEmail2" column="USER_EMAIL2"/>
+		<result property="userPhoneNumber" column="USER_PHONENUMBER"/>
+		<result property="userAddress" column="USER_ADDRESS"/>
+		<result property="userBirthYear" column="USER_BIRTHYEAR"/>
+		<result property="userBirthMonth" column="USER_BIRTHMONTH"/>
+		<result property="userBirthDate" column="USER_BIRTHDATE"/>
+		<result property="userBirthType" column="USER_BIRTHTYPE"/>
+		<result property="userSex" column="USER_SEX"/>
+		
+	</resultMap>
+	
+	
+	<!-- 10.8. 봉재 : iBatis insert 쿼리 구문 추가(여기에 양력/음력 및 남자/여자 내용은 빠져 있음) -->
+	<insert id="InsertUserInformation" parameterClass="user">
+		INSERT INTO	TBL_USER_INFO
+			(USER_ID, 
+			USER_PASSWORD, 
+			USER_NAME, 
+			USER_EMAIL1, 
+			USER_EMAIL2, 
+			USER_PHONENUMBER, 
+			USER_ADDRESS, 
+			USER_BIRTHYEAR, 
+			USER_BIRTHMONTH, 
+			USER_BIRTHDATE, 
+			REG_DATE)	
+		VALUES
+			(#userID#, 
+			#userPassword#, 
+			#userName#, 
+			#userEmail1#, 
+			#userEmail2#, 
+			#userPhoneNumber#, 
+			#userAddress#, 
+			#userBirthYear#, 
+			#userBirthMonth#, 
+			#userBirthDate#, 
+			NOW())	
+	</insert>
+
+
+
+	
+	<select id="selectUserByUserEmail" parameterClass="RequestParameter" resultMap="userResult">
+		SELECT
+			USER_SEQ, USER_EMAIL, USER_PASSWORD, USER_NAME, USER_RRN_NO, USER_PMT_NO, USER_STATUS, USER_REG_DATE
+		FROM
+			TBL_000_USER
+		WHERE
+			USER_EMAIL = #userEmail#
+		<isNotEmpty property="userPassword">
+			AND USER_PASSWORD = #userPassword#
+		</isNotEmpty>
+	</select>
+
+</sqlMap>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+package com.ajou.secure.attachfile;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.ajou.secure.common.BaseDao;
+import com.ajou.secure.common.Dao;
+
+
+@Repository("attachFileDao")
+public class AttachFileDaoImpl extends BaseDao implements Dao {
+
+	@Override
+	public void insert(Object obj) throws SQLException {
+		getSqlMapClientTemplate().insert("com.ajou.secure.attachFile.uploadFile",obj);
+	}
+
+	@Override
+	public Object select(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(Object obj) {
+		getSqlMapClientTemplate().delete("com.neopad.infobee_car.attachFile.deleteBySeq", obj);
+		
+	}
+
+	@Override
+	public List getList(Object obj) throws SQLException {
+		return getSqlMapClientTemplate().queryForList("com.ajou.secure.attachFile.getListBySellSeq",obj);
+	}
+
+	@Override
+	public int getRowCount(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public AttachFile getObjectBySeq(Object obj) {
+		return (AttachFile) getSqlMapClientTemplate().queryForObject("com.ajou.secure.attachFile.getObjectBySeq", obj);
+	}
+
+	public AttachFile getObjectBySellSeq(int sellCarSeq) {
+		return (AttachFile) getSqlMapClientTemplate().queryForObject("com.neopad.infobee_car.attachFile.getObjectBySellSeq",sellCarSeq);
+	}
+
+	public void deleteBySellCarSeq(Object obj) {
+		getSqlMapClientTemplate().delete("com.neopad.infobee_car.attachFile.deleteBySellCarSeq", obj);
+	}
+
+}

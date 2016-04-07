@@ -1,0 +1,41 @@
+package com.ajou.secure.attachfile;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+
+@Service("attachFileService")
+public class AttachFileServiceImpl  {
+	
+	@Resource(name = "attachFileDao")
+	AttachFileDaoImpl dao;
+
+	public void save(Object attachFile) throws SQLException {
+		dao.insert(attachFile);
+	}
+
+	public List<AttachFile> getListBySellSeq(int sellCarSeq) throws SQLException {
+		return dao.getList(sellCarSeq);
+	}
+
+	public AttachFile getObjectBySeq(Object obj) {
+		return dao.getObjectBySeq(obj);
+	}
+
+	public void delete(Object obj) {
+		dao.delete(obj);
+	}
+
+	public AttachFile getObjectBySellSeq(int sellCarSeq) {
+		return dao.getObjectBySellSeq(sellCarSeq);
+	}
+
+	public void deleteBySellCarSeq(Object obj) {
+		dao.deleteBySellCarSeq(obj);
+	}
+
+}

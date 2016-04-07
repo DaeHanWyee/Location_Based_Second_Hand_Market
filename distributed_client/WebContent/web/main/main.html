@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript" src="../../js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../js/addScript.js"></script>
+<script type="text/javascript" src="../../js/jquery.popupWindow.js"></script>
+<script type="text/javascript" src="../../js/infobee.common.js"></script>
+</head>
+
+<script type="text/javascript">
+
+
+var domainText = getDomain();	
+
+function getDomain(){
+	return "localhost:8080";
+}
+
+function login(userId, passwd){
+	var params = "userEmail="+userId+"&userPassword="+passwd;
+	
+	$.ajax({
+        type: "POST",
+        url: "http://"+domainText+"/secure_server/user/login.do",
+        callback: "callbak",
+		dataType: "jsonp",
+		data:params,
+        success: function(data){
+        	$.each(data, function(k,v){
+            	if(k=="success"){
+            		alert("성공");
+            		location.href="./success.html"
+            	}
+            	
+            	if(k=="fail"){
+            		alert("실패");
+            		$("#userId").val("");
+            		$("#passwd").val("");
+            	}
+        		
+        	});
+        }
+    });
+}
+
+
+function check()
+{
+	var id = $("#userId").attr("value");
+	var passwd = $("#passwd").attr("value");
+	
+	if(id == "")
+	{
+    	alert("아이디를 입력하셔야 합니다.");
+ 		$("#userId").focus();
+ 		
+ 		return false;
+	}
+	
+	if(passwd == "")
+	{
+	    alert("비밀번호를 입력하셔야 합니다.");
+		$("#passwd").focus();
+		
+		return false;
+	}
+	
+	login(id, passwd);
+	
+}
+
+function registerUser()
+{
+	
+	location.href="./userEntry.html"
+
+}
+
+
+</script>
+
+
+<body>
+     <input type="hidden" name="fp" value="/soo.jsp">
+     <table align="center" cellpadding="3" cellspacing="1" 
+                            border="1" bordercolor="Maroon">
+           <tr>
+       <td colspan="2" align="center">
+      <font size="4"><B>로그인</B></font>
+    </td>
+     </tr>
+     <tr>
+       <td>아이디</td>
+    <td><input type="text" id="userId" name="id" size="25"></td>
+     </tr>
+     <tr>
+       <td>비밀번호</td>
+    <td><input type="password" id="passwd" name="pwd" size="27"></td>
+     </tr>
+     <tr>
+       <td colspan="2" align="center"> 
+       <input type="button" value="로그인" onclick="check()">
+    <input type="reset" value="다시입력" onclick="rewrite()">
+    <input type="button" value="회원가입" onclick="registerUser()">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" value="닫기" onclick="self.close()">
+    </td>
+     </tr>
+  </table>
+  
+  </body>
+</html>
+
+</body>
+</html>

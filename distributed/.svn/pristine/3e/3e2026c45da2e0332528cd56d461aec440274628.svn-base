@@ -1,0 +1,60 @@
+package com.ajou.secure.common;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.ajou.secure.attachfile.AttachFile;
+
+
+public class FileDownloadUtil {
+	
+	public static void outputFile(AttachFile attachfile, HttpServletRequest request, HttpServletResponse response, String realPath) throws IOException{
+		if (attachfile != null) {
+			
+			response.setContentType("application/octet-stream;charset=utf-8");
+			
+			String userAgent = request.getHeader("User-Agent");
+			
+			if (userAgent.indexOf("MSIE 5.5") > -1) {
+				response.setHeader("Content-Disposition", "filename=" 
+						+ java.net.URLEncoder.encode(attachfile.getAttachFileName(), "UTF-8") + ";");
+			} else if (userAgent.indexOf("MSIE") > -1) {
+				response.setHeader("Content-Disposition", "attachment; filename=" 
+						+ java.net.URLEncoder.encode(attachfile.getAttachFileName(), "UTF-8") + ";");
+			} else {
+				response.setHeader("Content-Disposition", "attachment; filename=" 
+						+ new String(attachfile.getAttachFileName().getBytes("euc-kr"), "latin1") + ";");
+			}
+			
+			File tempFile = new File(realPath + attachfile.getAttachTempName());
+			BufferedInputStream bis = null;			
+			ServletOutputStream sos = response.getOutputStream();
+			
+			byte readByte[] = new byte[4096];
+			int totalBytesRead = 0;
+			try {
+				bis = new BufferedInputStream(new FileInputStream(tempFile));
+				
+				int bytesRead;
+				while((bytesRead = bis.read(readByte, 0, 4096)) != -1) {
+					sos.write(readByte, 0, bytesRead);
+					totalBytesRead += bytesRead;
+				}
+				bis.close();
+			} catch (Exception e) {
+				
+			}
+			
+			response.setContentLength(totalBytesRead);
+			sos.flush();
+			sos.close();
+		}
+	}
+
+}

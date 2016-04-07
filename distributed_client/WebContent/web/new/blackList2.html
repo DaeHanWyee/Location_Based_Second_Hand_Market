@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../js/addScript.js"></script>
+    <script type="text/javascript" src="../../js/jquery.popupWindow.js"></script>
+    <script type="text/javascript" src="./js/common.js"></script>
+    <script type="text/javascript" src="./js/inchanblackList.js"></script>
+    <script type="text/javascript" src="./js/accessValidation.js"></script>
+    <script type="text/javascript">
+	$(window).load(
+			sessionValidationRemover
+	);
+	</script>
+    
+</head>
+
+
+
+<body onload="getAccessAuth(1);page_Lock_Load('blackList');">
+    <div class="PPOMPPU">
+        <div class="container">
+            <h1>PPOMPPU</h1>
+            <p>사람이 좋아 함께하는 곳..뽐뿌!</p>
+        </div>
+    </div>
+    <div class="nav2">
+        <div class="container">
+            <ul class="pull-left">
+                <a href="main.html">
+                    <li>뽐뿌</li>
+                </a>
+                <a href="#">
+                    <li>이벤트</li>
+                </a>
+                <a href="#">
+                    <li>정보</li>
+                </a>
+                
+                <!-- <a href="boardListPage.html">
+                    <li>커뮤니티</li>
+                </a>-->
+                <a onclick="validatedAccess('boardList','boardListPage.html')"><li>커뮤니티</li></a>
+                
+                <a href="#">
+                    <li>갤러리</li>
+                </a>
+                
+                <!-- <a href="goodsListPage.html">
+                    <li>장터</li>
+                </a>-->
+                <a onclick="validatedAccess('goodList','goodsListPage.html')"><li>장터</li></a>
+                
+                <a href="#">
+                    <li>포럼</li>
+                </a>
+                <a href="#">
+                    <li>소셜커머스</li>
+                </a>
+            </ul>
+            <ul class="pull-right" id="non_member">
+                <a href="userRegistrationPage.html">
+                    <li>회원가입</li>
+                </a>
+                <a href="userLoginPage.html">
+                    <li>로그인</li>
+                </a>
+                <a href="#">
+                    <li>Help</li>
+                </a>
+            </ul>
+            <ul class="pull-right" id="member">
+                <a href="userModifyPage.html">
+                    <li id="identify">님</li>
+                </a>
+                <a href="#">
+                    <li onclick="logout()">로그아웃</li>
+                </a>
+                <a href="#">
+                    <li>Help</li>
+                </a>
+            </ul>
+             <ul class="pull-right" id="admin">
+          <!-- <a href="userModifyPage.html"><li id="identify">관리자님</li></a>-->
+          <a onclick="validatedAccess('userModify','userModifyPage.html')"><li id="identify">관리자님</li></a>
+          <a href="#"><li onclick="logout()">로그아웃</li></a>
+          <!-- <a href="blackList2.html"><li>관리</li></a>-->
+          <a onclick="validatedAccess('blackList','blackList2.html')"><li>관리</li></a>
+	          <a href="#"><li>Help</li></a>
+        </ul>
+        </div>
+    </div>
+    </br>
+    
+    <div class="container" id=blacklistpage>
+	    <table class="table_list" id="blacklist" summary="BlackList & Norman User control page" cellspacing="0">
+	    	<caption>Blacklist and Normal user management</caption>
+	    	<colgroup>
+	    		<col width="5%" />
+	    		<col width="15%" />
+	    		<col width="13%" />
+	    		<col width="8%" />
+	    		<col width="8%" />
+	    		<col width="13%" />
+	    		<col width="13%" />
+	    	</colgroup>
+	    	<thead>
+	    		<tr>
+	    			<th scope="col">번호</th>
+	    			<th scope="col">아이디</th>
+	    			<th scope="col">이름</th>
+	    			<th scope="col">게시글 수</th>
+	    			<th scope="col">이메일</th>
+	    			<th scope="col">현재상태</th>
+	    			<th scope="col">Checklist</th>
+	    		</tr>
+	    	</thead>
+	    	<tbody id = "userTable">
+	    		<tr>
+	    			<td class="num">1</td>
+	    			<td class="title">
+	    			<a href="#">wdhwdh1</a>
+	   				</td>
+	    			<td class="num">위대한</td>
+	    			<td class="num">3</td>
+	    			<td class="num">wdhwdh1@naver.com</td>
+	    			<td class="num">Normal User</td>
+	    			<td class="num"><input type = "checkbox" ></td>
+	    		</tr>
+	    		<tr>
+	    			<td class="num">2</td>
+	    			<td class="title"><a href="#">quddnr153</a></td>
+	    			<td class="num">이병욱</td>
+	    			<td class="num">15</td>
+	    			<td class="num">quddnr153@naver.com</td>
+	    			<td class="num">Normal User</td>
+	    			<td class="num"><input type = "checkbox" ></td>
+	    		</tr>	
+	    		
+	    	</tbody>
+    	</table>
+    	<br/>
+    	<div align="center" id="paging">1 2 3</div>
+    </div>
+    <br></br>
+    <div class="container">
+    <button type="button" class="btn btn-danger" onclick="updateUserAuth(2);">Add to blacklist</button>
+	<button type="button" class="btn btn-primary" onclick="updateUserAuth(1);">change to normal user</button>   
+	
+	</div>
+	
+	
+	<div class="container">
+	<div id="foot" class="logo" >
+              <p class="etc">
+                
+                    <ul class>
+                    <a href="http://www.ppomppu.co.kr/index.php"><img src="http://www.ppomppu.co.kr/images/main/201111/footer_logo_01.jpg" alt="뽐뿌" /></a>
+                        <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=dup">중복게시판</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&no=3"><span style="color:#527bc2"><b>개인정보취급방침</b></span></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&page=2&divpage=1&no=5">청소년보호정책</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="http://www.ppomppu.co.kr/zboard/view.php?id=faq&no=17">광고/제휴 안내</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                        <a href="mailto:webmaster@ppomppu.co.kr">메일문의 (<em>webmaster@ppomppu.co.kr</em>)</a>
+                    </ul>
+                
+            </p>
+        </div>
+        </div>
+
+	<!-- 
+	<div class="apologize">
+		<div class="thumbnail">
+			<img
+				src="http://t1.daumcdn.net/thumb/T430x0ht.u/?fname=http://t1.daumcdn.net/news/201509/12/chosunbiz/20150912143002823kphf.jpg">
+		</div>
+	</div>
+	 -->
+</body>

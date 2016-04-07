@@ -1,0 +1,101 @@
+package com.ajou.secure.goods;
+
+public class Goods {
+
+	private int goodsNumSeq;
+	private String goodsSubject;
+	private String goodsWriter;	//외래키 userName
+	private String goodsContents;
+
+	private int goodsHits;
+	private int goodsRecommendation;
+	private int goodsStockcount;
+	private int goodsOrdercount;
+	private String goodsRegdate;
+	private String goodsModdate;
+	private int goodsStep;
+	private int goodsUpper;
+	private int goodsRootUpper;
+	
+	
+	public int getGoodsNumSeq() {
+		return goodsNumSeq;
+	}
+	public void setGoodsNumSeq(int goodsNumSeq) {
+		this.goodsNumSeq = goodsNumSeq;
+	}
+	public String getGoodsSubject() {
+		return goodsSubject;
+	}
+	public void setGoodsSubject(String goodsSubject) {
+		this.goodsSubject = goodsSubject;
+	}
+	public String getGoodsWriter() {
+		return goodsWriter;
+	}
+	public void setGoodsWriter(String goodsWriter) {
+		this.goodsWriter = goodsWriter;
+	}
+	public String getGoodsContents() {
+		return goodsContents;
+	}
+	public void setGoodsContents(String goodsContents) {
+		this.goodsContents = goodsContents;
+	}
+
+	public int getGoodsHits() {
+		return goodsHits;
+	}
+	public void setGoodsHits(int goodsHits) {
+		this.goodsHits = goodsHits;
+	}
+	public int getGoodsRecommendation() {
+		return goodsRecommendation;
+	}
+	public void setGoodsRecommendation(int goodsRecommendation) {
+		this.goodsRecommendation = goodsRecommendation;
+	}
+	public int getGoodsStockcount() {
+		return goodsStockcount;
+	}
+	public void setGoodsStockcount(int goodsStockcount) {
+		this.goodsStockcount = goodsStockcount;
+	}
+	public int getGoodsOrdercount() {
+		return goodsOrdercount;
+	}
+	public void setGoodsOrdercount(int goodsOrdercount) {
+		this.goodsOrdercount = goodsOrdercount;
+	}
+	public String getGoodsRegdate() {
+		return goodsRegdate;
+	}
+	public void setGoodsRegdate(String goodsRegdate) {
+		this.goodsRegdate = goodsRegdate;
+	}
+	public String getGoodsModdate() {
+		return goodsModdate;
+	}
+	public void setGoodsModdate(String goodsModdate) {
+		this.goodsModdate = goodsModdate;
+	}
+	public int getGoodsStep() {
+		return goodsStep;
+	}
+	public void setGoodsStep(int goodsStep) {
+		this.goodsStep = goodsStep;
+	}
+	public int getGoodsUpper() {
+		return goodsUpper;
+	}
+	public void setGoodsUpper(int goodsUpper) {
+		this.goodsUpper = goodsUpper;
+	}
+	
+	public int getGoodsRootUpper() {
+		return goodsRootUpper;
+	}
+	public void setGoodsRootUpper(int goodsRootUpper) {
+		this.goodsRootUpper = goodsRootUpper;
+	}
+}

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+	    <script type="text/javascript" src="/secure_client/js/jquery-1.5.2.min.js"></script>
+		<script type="text/javascript" src="/secure_client/js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="/secure_client/js/jquery.popupWindow.js"></script>
+
+</head>
+<script type="text/javascript">
+
+var map = [{'num':'1','title':'aa','writer':'aaa','date':'aaaa','hit':'0'},
+			{'num':'2','title':'bb','writer':'bbb','date':'bbbb','hit':'1'},
+			{'num':'3','title':'cc','writer':'ccc','date':'cccc','hit':'2'}];
+	
+
+var html = '<table width="100%" cellpadding="0" cellspacing="0" border="0">'
+	html += '<tr height="5"><td width="5"></td></tr>'
+	html += '<tr style="background:url('+'img/table_mid.gif'+') repeat-x; text-align:center;">'
+	html += '<td width="5"><img src="img/table_left.gif" width="5" height="30" /></td>'
+	html += '<td width="73">번호</td>'
+	html += '<td width="379">제목</td>'
+	html += '<td width="73">작성자</td>'
+	html += '<td width="164">작성일</td>'
+	html += '<td width="58">조회수</td>'
+	html += '<td width="7"><img src="img/table_right.gif" width="5" height="30" /></td>'
+	html += '</tr>'
+
+function loadArticle(num){
+	location.href="article.html?num="+num;
+}
+
+
+function listView(){
+	var htmlInner = html;
+	$.each(map, function(k,v){
+		htmlInner += "<tr height='25' align='center'>"
+		htmlInner += "<td>&nbsp;</td>";
+		htmlInner += "<td>"+v["num"]+"</td>";
+		htmlInner +=	"<td align='left' onclick='loadArticle("+v['num']+")'>"+v["title"]+"</td>";
+		htmlInner += "<td align='center'>"+v["writer"]+"</td>";
+		htmlInner += "<td align='center'>"+v["date"]+"</td>";
+		htmlInner += "<td align='center'>"+v["hit"]+"</td>";
+		htmlInner += "<td>&nbsp;</td>";
+		htmlInner += "</tr>"
+		htmlInner += '<tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>'
+		htmlInner += '<tr height="1" bgcolor="#82B5DF"><td colspan="6" width="752"></td></tr>'
+//			console.log(v);
+//			console.log("aaa");
+	});
+	/*
+	html += "<td>&nbsp;</td>";
+	html += "<td>1</td>";
+	html +=	"<td align='left'>bbbb</td>";
+	html += "<td align='center'>cccc</td>";
+	html += "<td align='center'>dddd</td>";
+	html += "<td align='center'>eeee</td>";
+	html += "<td>&nbsp;</td>";
+
+
+
+	*/
+	
+	htmlInner += '</table>'
+
+	$("#list").html(htmlInner);
+
+	$("#test").attr("disabled", true);
+}
+
+
+function move(){
+	location.href="write.html";
+}
+
+</script>
+
+
+
+<body onload="listView()">
+<div id="list">
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr height="5"><td width="5"></td></tr>
+ <tr style="background:url('img/table_mid.gif') repeat-x; text-align:center;">
+   <td width="5"><img src="img/table_left.gif" width="5" height="30" /></td>
+   <td width="73">번호</td>
+   <td width="379">제목</td>
+   <td width="73">작성자</td>
+   <td width="164">작성일</td>
+   <td width="58">조회수</td>
+   <td width="7"><img src="img/table_right.gif" width="5" height="30" /></td>
+  </tr>
+  <tr align="center" bgcolor="#FFFFFF" height="30">
+	 	   <td colspan="6">등록된 글이 없습니다.</td>
+  </tr>
+
+
+  <tr height="1" bgcolor="#D2D2D2"><td colspan="6"></td></tr>
+
+ <tr height="1" bgcolor="#82B5DF"><td colspan="6" width="752"></td></tr>
+ </table>
+ </div>
+ 
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr><td colspan="4" height="5"></td></tr>
+  <tr align="center">
+   <td><input id="non" type=button value="글쓰기" onclick="move()" ></td>
+
+  </tr>
+</table>
+</body>
+
+</html>

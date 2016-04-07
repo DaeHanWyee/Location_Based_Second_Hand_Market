@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>정보입력 - [뽐뿌]</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- SVR 108 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script src="/secure_client/js/jquery-1.5.2.min.js"></script>
+
+
+<script type="text/javascript">
+
+// 도메인 이름 얻기
+function getDomain(){
+	return "localhost:8080";
+}
+
+var domainText = getDomain();	
+
+//취소 버튼 누를시
+function previousPage()
+{
+	location.href="./main.html"
+}
+
+
+//회원가입처리
+function registerComplete(){
+
+	
+	// 필수 항목 기입 여부 점검
+	if ( $("#tbUserName").val() == "")
+	{
+		alert("이름을 입력하세요");
+		return false;
+	} 
+	
+	if ($("#tbUserID").val().length < 4) 
+	{
+		alert("입력값 오류! 아이디는 영문,숫자로 4자 이상 입력해주세요.");
+		return false;
+		} 
+	
+	if ($("#tbPassWord1").val().length < 8) 
+	{
+		alert("입력값 오류! 비밀번호는 영문, 숫자, 기호를 혼합하여 8자 이상 16자 이하로 만들어주세요.");
+		return false;
+	}
+
+	if ($("#tbPassWord2").val() == "") {
+		alert("입력값 오류! 비밀번호 확인을 위해 동일하게 입력해주세요.");
+		return false;
+	}
+
+	if ($("#tbPassWord1").val() != $("#tbPassWord2").val()) {
+		alert("입력값 오류! 입력하신 비밀번호가 다릅니다.");
+		return false;
+	}
+	if ($("#tbEmail1").val() == "") {
+		alert("입력값 오류! 이메일을 정확히 입력해주세요.");
+		return false;
+	}
+
+	if ($("#tbEmail2").val() == "") 
+	{
+		alert("입력값 오류! 이메일의 도메인을 정확히 입력해주세요.");
+		return false;
+	}
+
+	if ($("#tbMobil").val() == "") 
+	{
+		alert("입력값 오류! 휴대전화번호를 입력해주세요.");
+		$("#tbMobil1").focus();
+		return false;
+	} 
+	
+	
+	// 전송 메시지 생성:registration.do 서블릿을 확인하여 userController로 ajax로 작성된 JSON 메시지 전송
+	// 10.08. POST로 타입 변경
+	
+	$.ajax({
+        type: "POST",
+        url: "http://" + domainText + "/secure_server/user/user_registration.do?userID="+$("#tbUserID").attr("value")
+        		+"&userPassword="+$("#tbPassWord1").attr("value")+"&userName="+$("#tbUserName").attr("value")
+        		+"&userEmail1="+$("#tbEmail1").attr("value")+"&userEmail2="+$("#tbEmail2").attr("value")
+        		+"&userPhoneNumber="+$("#tbMobil").attr("value")+"&userAddress="+$("#tbAddress").attr("value")
+        		+"&userBirthYear="+$("#tbBirthYear").attr("value")+"&userBirthMonth="+$("#tbBirthMonth").attr("value")
+        		+"&userBirthDate="+$("#tbBirthDate").attr("value")+"&userBirthType="+$("#tbBirthType").attr("value")
+        		+"&userSex="+$("#userSex").attr("value") ,
+        callback:"callbak",
+		dataType: "jsonp",
+
+		//성공하면 성공 메시지가 뜨고 /success로 이동하고, 실패하면, 처음부터 다시임
+		success:
+			function(data){
+        	$.each(data, function(k,v){
+            	if(k=="success"){
+            		alert("성공");
+            		location.href="./success.html"
+            	}
+            	
+            	if(k=="fail"){
+            		alert("실패");
+            		location.href="./userEntry.html"
+            	}
+        	});
+        },
+        
+        //404에러와 같이 서버응담이 없는경우 실패 alert만 생성하고 현재 페이지에 위치함
+        error: function(){
+        	alert("실패");
+        }
+		
+    });
+    return false;
+}
+
+
+
+</script>
+
+
+</head>
+<body>
+	<div id="wrap">
+		<div id="container" class="sub-index">
+			<div class="box_join">
+				<div class="box_process">
+
+					<div class="acenter">
+						<p>
+							<img
+								src="https://file.funshop.co.kr/www/member/txt_basic_info.gif"
+								width="140" height="24" alt="기본정보 입력" />
+						</p>
+						<p class="subsection10">
+							<img src="https://file.funshop.co.kr/www/member/txt_strong.gif"
+								width="14" height="12" alt="필수항목" /><img
+								src="https://file.funshop.co.kr/www/member/txt_essential.gif"
+								width="148" height="12" alt="표시는 필수 입력항목 입니다." />
+						</p>
+					</div>
+					<div class="boardwrite-wrap subsection15">
+						<table summary="회원가입에 필요한 기본정보 입력 테이블" id="regster">
+							<colgroup>
+								<col width="20%" />
+								<col width="auto" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row"><label for="name">이름<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="text" id="tbUserName" name="FullName"
+										class="txt" maxlength="12" /></td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="id">아이디<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="text" id="tbUserID" name="Account"
+										class="txt" maxlength="16" />
+										<button type="button" id="btnIDCheck" class="btn_id_check">
+											아이디 중복체크</button></td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="pwd">비밀번호<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="password" id="tbPassWord1"
+										name="password" class="txt" maxlength="16" /> <img
+										src="https://file.funshop.co.kr/www/member/txt_input_explain.gif"
+										alt="비밀번호는 영어와 숫자를 혼합하여 4자 이상 16자 이하로 만들어주세요." class="space" /></td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="pwd_confirm">비밀번호 확인<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="password" id="tbPassWord2"
+										name="password2" class="txt" maxlength="16" /></td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="email">이메일<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="text" id="tbEmail1" name="Email1"
+										class="txt w_mail" maxlength="40" /> <img
+										src="https://file.funshop.co.kr/www/common/board/txt_at.gif"
+										width="11" height="11" alt="" /> <input type="text"
+										id="tbEmail2" name="Email2" class="txt w_mail" maxlength="40"
+										title="이메일 직접입력" /></td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="hp">휴대폰 번호<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="text" id="tbMobil" name="Mobile"
+										class="txt w_hp" title="휴대폰 번호" maxlength="11" /> "-"를 생략해서
+										입력해 주세요</td>
+								</tr>
+								<tr>
+									<th scope="row"><label for="tel">주소</label></th>
+									<td><input type="text" id="tbAddress" name="Address"
+										class="txt w_hp" title="주소" maxlength="100" /></td>
+								</tr>
+								<tr id="trBirth">
+									<th scope="row"><label for="birthday">생년월일<img
+											src="https://file.funshop.co.kr/www/common/icon/ico_strong.gif"
+											width="14" height="13" alt="필수항목" /></label></th>
+									<td><input type="text" id="tbBirthYear" name="BirthYear" class="txt w_hp" title="태어난 연도" maxlength="4" /> 년 
+									<input type="text" id="tbBirthMonth" name="BirthMonth" class="txt w_hp" title="태어난 달" maxlength="2" /> 월 
+									<input type="text" id="tbBirthDate" name="BirthDate" class="txt w_hp" title="태어난 년도" maxlength="2" />일 
+									<input type="radio"	id="solar" name="BirthType" value="2" class="space" checked />
+									<label for="solar">양력</label> 
+									<input type="radio" id="lunar" name="BirthType" value="1" class="space" /><label for="lunar">음력</label></td>
+								</tr>
+								<tr id="trSex">
+									<th scope="row"><label for="gender">성별</label></th>
+									<td><input type="radio" id="gender1" name="Gender"
+										value="1" /><label for="gender1">남자</label> <input
+										type="radio" id="gender2" name="Gender" value="2"
+										class="space" /><label for="gender2">여자</label></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="btnset">
+						<button id="btnSubmit" type="button" class="btn_join"
+							onclick="registerComplete()">회원가입</button>
+						<button id="btnDisAgree" type="button" class="btnDisAgree"
+							onclick="previousPage()">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+package com.ajou.secure.board;
+
+public class Board {
+	
+	
+	//10.27. 봉재 - Board에서 Password 추가
+	private int boardNumSeq;
+	private String boardSubject;
+	private String boardWriter;	//외래키 userName
+	private String boardType;
+	private String boardPassword;
+	private String boardContents;
+	private int boardHits;
+	private int boardRecommendation;
+	private String boardRegdate;
+	private String boardModdate;
+	private int boardStep;
+	private int boardUpper;
+	private int boardRootUpper;
+	private int commentCnt;
+
+	public int getCommentCnt() {
+		return commentCnt;
+	}
+	public void setCommentCnt(int commentCnt) {
+		this.commentCnt = commentCnt;
+	}
+	
+	
+	public int getBoardNumSeq() {
+		return boardNumSeq;
+	}
+	public void setBoardNumSeq(int boardNumSeq) {
+		this.boardNumSeq = boardNumSeq;
+	}
+	public String getBoardSubject() {
+		return boardSubject;
+	}
+	public void setBoardSubject(String boardSubject) {
+		this.boardSubject = boardSubject;
+	}
+	public String getBoardWriter() {
+		return boardWriter;
+	}
+	public void setBoardWriter(String boardWriter) {
+		this.boardWriter = boardWriter;
+	}
+	public String getBoardType() {
+		return boardType;
+	}
+	public void setBoardType(String boardType) {
+		this.boardType = boardType;
+	}
+	public String getBoardPassword() {
+		return boardPassword;
+	}
+	public void setBoardPassword(String boardPassword) {
+		this.boardPassword = boardPassword;
+	}
+	public String getBoardContents() {
+		return boardContents;
+	}
+	public void setBoardContents(String boardContents) {
+		this.boardContents = boardContents;
+	}
+	public int getBoardHits() {
+		return boardHits;
+	}
+	public void setBoardHits(int boardHits) {
+		this.boardHits = boardHits;
+	}
+	public int getBoardRecommendation() {
+		return boardRecommendation;
+	}
+	public void setBoardRecommendation(int boardRecommendation) {
+		this.boardRecommendation = boardRecommendation;
+	}
+	public String getBoardRegdate() {
+		return boardRegdate;
+	}
+	public void setBoardRegdate(String boardRegdate) {
+		this.boardRegdate = boardRegdate;
+	}
+	public String getBoardModdate() {
+		return boardModdate;
+	}
+	public void setBoardModdate(String boardModdate) {
+		this.boardModdate = boardModdate;
+	}
+	public int getBoardStep() {
+		return boardStep;
+	}
+	public void setBoardStep(int boardStep) {
+		this.boardStep = boardStep;
+	}
+	public int getBoardUpper() {
+		return boardUpper;
+	}
+	public void setBoardUpper(int boardUpper) {
+		this.boardUpper = boardUpper;
+	}
+	public int getBoardRootUpper() {
+		return boardRootUpper;
+	}
+	public void setBoardRootUpper(int boardRootUpper) {
+		this.boardRootUpper = boardRootUpper;
+	}
+}

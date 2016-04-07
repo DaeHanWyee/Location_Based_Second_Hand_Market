@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script type="text/javascript" src="../../js/jquery-1.5.2.min.js"></script>
+    <script type="text/javascript" src="../../js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../js/addScript.js"></script>
+    <script type="text/javascript" src="../../js/jquery.popupWindow.js"></script>
+    <script type="text/javascript" src="../../js/pbkdf2.js"></script>
+	<script type="text/javascript" src="../../js/sha256.js"></script>
+    <script type="text/javascript" src="./js/common.js"></script>
+    <script type="text/javascript" src="./js/user.js"></script>
+    <script type="text/javascript" src="./js/accessValidation.js"></script>
+    <script type="text/javascript">
+    $(window).load(
+			sessionValidationRemover
+	);
+    </script>
+</head>
+<script type="text/javascript">
+</script>
+
+<body onload="user_registration_load('userLogin')">
+
+    <div class="PPOMPPU">
+        <div class="container">
+            <h1>PPOMPPU</h1>
+            <p>사람이 좋아 함께하는 곳..뽐뿌!</p>
+        </div>
+    </div>
+
+    <div class="nav2">
+        <div class="container">
+            <ul class="pull-left">
+                <a href="main.html">
+                    <li>뽐뿌</li>
+                </a>
+                <a href="#">
+                    <li>이벤트</li>
+                </a>
+                <a href="#">
+                    <li>정보</li>
+                </a>
+                <a onclick="validatedAccess('boardList','boardListPage.html')"><li>커뮤니티</li></a>
+                <a href="#">
+                    <li>갤러리</li>
+                </a>
+               <a onclick="validatedAccess('goodList','goodsListPage.html')"><li>장터</li></a>
+                <a href="#">
+                    <li>포럼</li>
+                </a>
+                <a href="#">
+                    <li>소셜커머스</li>
+                </a>
+            </ul>
+            <ul class="pull-right">
+                <a onclick="validatedAccess('registration','userRegistrationPage.html')"><li>회원가입</li></a>
+                <a onclick="validatedAccess('userLogin', 'userLoginPage.html')"><li>로그인</li></a>
+                <a href="#">
+                    <li>Help</li>
+                </a>
+            </ul>
+             <ul class="pull-right" id="admin">
+          <a onclick="validatedAccess('userModify','userModifyPage.html')"><li id="identify">관리자님</li></a>
+          <a href="#"><li onclick="logout()">로그아웃</li></a>
+          <a onclick="validatedAccess('blackList','blackList2.html')"><li>관리</li></a>
+	          <a href="#"><li>Help</li></a>
+        </ul>
+        </div>
+    </div>
+    
+
+	</br>
+    <div id="body" class="thumbnail">
+	    <div class="container">
+	        <div class="logincontainer">
+	            <h1>PPOMPPU</h1>
+	            <table id="logintable" width="219" border="0" cellpadding="0" cellspacing="0">
+	                <tr>
+	                    <td style="height:28px;"></td>
+	                </tr>
+	                <tr>
+	                    <td id="login_form">
+	                        <table width="217" border="0" cellpadding="0" cellspacing="0" class="bd_g2">
+	                            <tr>
+	                                <td height="39" colspan="3" valign="middle"><span class="pd_bold1">로그인</span>&nbsp;하세요.</td>
+	                            </tr>
+	                            <tr>
+	                                <td width="149">
+	                                    <input id="userId" name="userId" type="text" class="text_box_login" placeholder="아이디" />
+	                                </td>
+	                            </tr>
+	                            <tr>
+	                                <td height="25" valign="bottom">
+	                                    <input id="userPw" name="userPw" type="password" class="text_box_login" placeholder="비밀번호" />
+	                                </td>
+	                                <td colspan="2" valign="bottom"><img src="../src/img/btn_login2.gif" onclick="check();" style="cursor:pointer;" /></td>
+	                            </tr>
+	                            <tr>
+	                                <td colspan="3" height="27" valign="bottom"><span class="pd_bold2" onclick="registerUser()">회원가입</span><span class="text_other09_2">&nbsp;I&nbsp;</span><span class="text_other09">아이디·비밀번호찾기</span></td>
+	                            </tr>
+	                            <tr>
+	                                <td colspan="3" height="22"></td>
+	                            </tr>
+	                        </table>
+	                    </td>
+	                </tr>
+	            </table>
+	        </div>
+	    </div>
+	</div>
+
+    <div id="foot" class="logo">
+        <p class="etc">
+            <div class="container">
+                <ul class="pull-right">
+                    <a href="http://www.ppomppu.co.kr/index.php"><img src="http://www.ppomppu.co.kr/images/main/201111/footer_logo_01.jpg" alt="뽐뿌" /></a>
+                    <a href="http://www.ppomppu.co.kr/zboard/zboard.php?id=dup">중복게시판</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&no=3"><span style="color:#527bc2"><b>개인정보취급방침</b></span></a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    <a href="http://www.ppomppu.co.kr/zboard/view.php?id=regulation&page=2&divpage=1&no=5">청소년보호정책</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    <a href="http://www.ppomppu.co.kr/zboard/view.php?id=faq&no=17">광고/제휴 안내</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    <a href="mailto:webmaster@ppomppu.co.kr">메일문의 (<em>webmaster@ppomppu.co.kr</em>)</a>
+                </ul>
+            </div>
+        </p>
+    </div>
+
+    <!-- 
+	<div class="apologize">
+		<div class="thumbnail">
+			<img
+				src="http://t1.daumcdn.net/thumb/T430x0ht.u/?fname=http://t1.daumcdn.net/news/201509/12/chosunbiz/20150912143002823kphf.jpg">
+		</div>
+	</div>
+	 -->
+</body>

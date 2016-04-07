@@ -1,0 +1,68 @@
+package com.ajou.secure.attachfile;
+
+public class AttachFile {
+	private int attachSeq;
+	private int attachSellSeq;
+	private String attachFileName;
+	private String attachTempName;
+	private String attachContentType;
+	private String attachFileUrl;
+	private String attachRegDate;
+	
+	public AttachFile() { }
+
+	public int getAttachSeq() {
+		return attachSeq;
+	}
+
+	public void setAttachSeq(int attachSeq) {
+		this.attachSeq = attachSeq;
+	}
+	
+	public int getAttachSellSeq() {
+		return attachSellSeq;
+	}
+
+	public void setAttachSellSeq(int attachSellSeq) {
+		this.attachSellSeq = attachSellSeq;
+	}
+
+	public String getAttachFileName() {
+		return attachFileName;
+	}
+
+	public void setAttachFileName(String attachFileName) {
+		this.attachFileName = attachFileName;
+	}
+
+	public String getAttachTempName() {
+		return attachTempName;
+	}
+
+	public void setAttachTempName(String attachTempName) {
+		this.attachTempName = attachTempName;
+	}
+
+	public String getAttachRegDate() {
+		return attachRegDate;
+	}
+
+	public void setAttachRegDate(String attachRegDate) {
+		this.attachRegDate = attachRegDate;
+	}
+
+	public String getAttachContentType() {
+		return attachContentType;
+	}
+
+	public void setAttachContentType(String attachContentType) {
+		this.attachContentType = attachContentType;
+	}
+	public String getAttachFileUrl() {
+		return attachFileUrl;
+	}
+
+	public void setAttachFileUrl(String attachFileUrl) {
+		this.attachFileUrl = attachFileUrl;
+	}
+}

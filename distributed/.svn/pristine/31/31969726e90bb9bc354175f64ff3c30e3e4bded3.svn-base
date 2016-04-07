@@ -1,0 +1,127 @@
+package com.ajou.secure.goods;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.ajou.secure.board.Board;
+import com.ajou.secure.common.RequestParameter;
+
+@Service("goodsService")
+public class GoodsServiceImpl implements com.ajou.secure.common.Service {
+	
+	@Resource(name = "goodsDao")
+	GoodsDaoImpl dao;
+
+	@Override
+	public Object getObject(Object obj) throws SQLException {
+		return this.dao.select(obj);
+	}
+
+	@Override
+	public boolean edit(Object obj) throws SQLException {
+		return true;
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List getList(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return dao.getListByPage(obj);
+	}
+
+	@Override
+	public int getRowCount(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void remove(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		dao.delete(obj);
+		
+	}
+	public List<Goods> getCommentList(String goodsUpper) throws SQLException {
+		// TODO Auto-generated method stub
+		return (List<Goods>) dao.getCommentList(goodsUpper);
+	}
+
+	public int saveCheckComment(Object obj) {
+		// TODO Auto-generated method stub
+		return dao.insertCommentCheck(obj);
+	}
+	
+	// save 서비스에 insert 추가 
+	@Override
+	public boolean save(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		dao.insertCheck(obj);
+		return true;
+	}
+	// 10.9 봉재 : update로직 추가
+	public boolean update(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		dao.update(obj);
+		return true;
+	}
+
+	@Override
+	public boolean delete(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
+	public Object login(Object obj) throws SQLException {
+		return dao.login(obj);
+	}
+	
+	public int saveCheck(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return dao.insertCheck(obj);
+	}
+	
+	public int updateCheckForWrite(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return dao.updateCheckForWrite(obj);
+	}
+	
+	public int updateCheck(Object obj) throws SQLException {
+		// TODO Auto-generated method stub
+		return dao.updateCheck(obj);
+	}
+	
+	public void removeStep1(Object obj) {
+		// TODO Auto-generated method stub
+		dao.deleteStep1(obj);
+	}
+	
+	public void removeAllComment(Object obj) {
+		// TODO Auto-generated method stub
+		dao.deleteAllComment(obj);
+	}
+	
+	public void updateUserBoardCountFall(String boardWriter) {
+		// TODO Auto-generated method stub
+		dao.updateUserBoardCountFall(boardWriter);
+	}
+
+	public String getPhone(RequestParameter rp) {
+		// TODO Auto-generated method stub
+		return dao.selectPhone(rp);
+	}
+	
+	public void setRecommand(RequestParameter rp) {
+		// TODO Auto-generated method stub
+		dao.boardSetRecommand(rp);
+	}
+
+	public int getGoodsCount(RequestParameter rp) {
+		// TODO Auto-generated method stub
+		return dao.goodsCount(rp);
+	}
+}

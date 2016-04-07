@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>�Խ���</title>
+   <script type="text/javascript" src="/secure_client/js/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="/secure_client/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/secure_client/js/jquery.popupWindow.js"></script>
+
+ </head>
+ <script type="text/javascript">
+ 
+var sessionId;
+
+function getDomainText(){
+	return "localhost:8080";
+}
+
+var domainText=getDomainText();
+
+function getSessionId()
+{
+	sessionId = 'sysadmin';
+}
+ 
+function loadData(){
+	getSessionId();
+	$("#name").val(sessionId);
+}
+ 
+ 
+/* 10.27. ���� - regist()�Լ� ����
+ * sessionId�� ���� ���ǿ� �ִ� ID�� �޾Ƽ� 
+ * �̸��� ID�� �ڵ����� ����ְ� ���ְ�, 
+ * ����ڰ� ID ������ ���ϰ� ��
+ * Ÿ�Կ��� radio box �߰� value�� ���ڷ� �ް� ���������� �ٽ� ��з�
+ */
+
+ function regist(){
+
+	 
+	if ( $("#title").val() == "")
+	{
+		alert("������ �Է��ϼ���");
+		return false;
+	}
+	
+	if ( $("#passwd").val() == "")
+	{
+		alert("��й�ȣ�� �Է��ϼ���");
+		return false;
+	} 
+
+	var contentsType = $(':radio[name="type"]:checked').val();
+	
+	 var param = "title="+$("#title").attr("value")
+		+"&writer="+sessionId
+		+"&password="+$("#passwd").attr("value")
+		+"&type="+contentsType
+		+"&contents="+$("#content").attr("value");
+		
+		
+		
+		$.ajax({
+	        type: "POST",
+	        url: "http://" + domainText + "/secure_server/board/board_registration.do",
+	        callback:"callbak",
+			dataType: "jsonp",
+			data:param,	
+			success:
+				function(data){
+	        	$.each(data, function(k,v){
+	            	if(k=="success"){
+	            		alert("�Խ��� ��� ����");
+	            		location.href="./board.html"
+	            	}
+            	
+	            	if(k=="fail"){
+	            		alert("�Խ��� ��� ����");
+	            		
+	            	}
+	        	});
+	        },
+       
+	        //404������ ���� ���������� ���°�� ���� alert�� �����ϰ� ���� �������� ��ġ��
+	        error: function(){
+	        	alert("���� ���� ����");
+	        }
+			
+	    });
+	    return false; 
+ }
+
+function back(){
+	location.href="board.html";
+}
+ </script>
+ 
+ 
+ <body onload="loadData()">
+<table>
+  <tr>
+   <td>
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+     <tr style="background:url('img/table_mid.gif') repeat-x; text-align:center;">
+      <td width="5"><img src="img/table_left.gif" width="5" height="30" /></td>
+      <td>�۾���</td>
+      <td width="5"><img src="img/table_right.gif" width="5" height="30" /></td>
+     </tr>
+    </table>
+   <table>
+     <tr>
+      <td>&nbsp;</td>
+      <td align="center">����</td>
+      <td><input name="title" size="50" maxlength="100" id="title"></td>
+      <td>&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td align="center">�̸�</td>
+      <td><input name="name" size="50" maxlength="50" id="name" readonly="true"></td>
+      <td>&nbsp;</td>
+     </tr>
+      <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td align="center">��й�ȣ</td>
+      <td><input type="password" name="password" size="50" maxlength="50" id="passwd"></td>
+      <td>&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+     <tr>
+      <td>&nbsp;</td>
+      <td align="center">Ÿ��</td>
+      <td><input type="radio"	id="public" name="type" value="1" class="space" checked />
+		<label for="public">�Ϲ�</label> 
+	  <input type="radio" id="notificaion" name="type" value="2" class="space" />
+	    <label for="notification">����</label>
+	  <input type="radio" id="private" name="type" value="3" class="space" />
+	    <label for="private">�����</label></td>
+      <td>&nbsp;</td>
+     </tr>     
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>     
+     <tr>
+      <td>&nbsp;</td>
+      <td align="center">����</td>
+      <td><textarea name="memo" cols="50" rows="13" id="content"></textarea></td>
+      <td>&nbsp;</td>
+     </tr>
+     <tr height="1" bgcolor="#dddddd"><td colspan="4"></td></tr>
+     <tr height="1" bgcolor="#82B5DF"><td colspan="4"></td></tr>
+     <tr align="center">
+      <td>&nbsp;</td>
+      <td colspan="2"><input type=button value="���" onclick="regist();">
+       <input type=button value="���" onclick="back()">
+      <td>&nbsp;</td>
+     </tr>
+    </table>
+   </td>
+  </tr>
+ </table>
+</body> 
+
+
+</html>

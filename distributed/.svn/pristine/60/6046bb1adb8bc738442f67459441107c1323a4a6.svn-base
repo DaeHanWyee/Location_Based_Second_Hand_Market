@@ -1,0 +1,47 @@
+package com.ajou.secure.test;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.ajou.secure.common.RequestParameter;
+import com.ajou.secure.common.Utils;
+import com.ajou.secure.user.User;
+
+@Controller
+public class Test {
+	
+	@RequestMapping("/test/test.do")
+	public ModelAndView login(HttpServletRequest req, HttpServletResponse res) throws Exception {
+		RequestParameter rp = Utils.extractRequestParameters(req);	
+		ModelAndView mnv = new ModelAndView("/common/json_result");
+		 
+		System.out.println("rp = "+ rp);
+		
+		// Todo: return value
+			
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> testmap = new HashMap<String, Object>();
+		
+		testmap.put("num", "1");
+		testmap.put("writer","인찬이");
+		testmap.put("title", "팔아요");
+		testmap.put("date", "2015/10/24");
+		testmap.put("like", "2324");
+		testmap.put("open", "23");
+		
+		map.put("success", testmap);
+		
+		mnv.addObject("map", map);
+		mnv.addObject("callback", req.getParameter("callback"));
+		
+		return mnv;
+	}
+
+}
